@@ -88,6 +88,12 @@ new #[Layout('components.layouts.auth')] class extends Component {
                 {{ __('Create account') }}
             </flux:button>
         </div>
+
+        <div class="flex items-center justify-end">
+            <flux:button variant="primary" href="{{ route('auth.google.redirect') }}" class="w-full">
+                Sign up with Google 
+            </flux:button>
+        </div>
     </form>
 
     <div class="space-x-1 rtl:space-x-reverse text-center text-sm text-zinc-600 dark:text-zinc-400">
