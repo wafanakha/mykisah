@@ -1,5 +1,8 @@
-- laravel > 12
-- php > 8.4
-- to run on your machine:
-enter command "php artisan migrate"
-and "php artisan serve"
+-   laravel > 12
+-   php > 8.4
+
+to run on your machine:
+
+1. add mysql connection on .env
+2. enter command "php artisan migrate"
+3. and "php artisan serve"
