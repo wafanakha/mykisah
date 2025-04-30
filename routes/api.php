@@ -16,10 +16,11 @@ Route::get('/user/{user}', function (User $user) {
     return $user;
 });
 
+Route::get('user', [userController::class, 'getbyName']);
 
-Route::get('kisah/user:{id}', [kisahController::class, 'getUserKisah']);
-Route::get('kisah/{id}', [kisahController::class, 'getKisah']);
-Route::get('kisah/', [kisahController::class, 'getAllkisah']);
+Route::get('kisah', [kisahController::class, 'getUserKisah']);
+Route::get('kisah', [kisahController::class, 'getKisah']);
+Route::get('kisah/all', [kisahController::class, 'getAllkisah']);
 
 Route::get('/api/auth/google/redirect', [GoogleAuthController::class, 'redirect'])->name('auth.google.redirect');
 Route::get('/api/auth/google/cphpphpallback', [GoogleAuthController::class, 'callback'])->name('auth.google.callback');
