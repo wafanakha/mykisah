@@ -10,7 +10,7 @@ class kisahController extends Controller
     public function getUserKisah(Request $request)
     {
         $id = $request->query('user');
-        $kisah = DB::select('select kisah.id as kisah_id, users.id as user_id, users.name, users.icon, judul, sinopsis, isi, genre  from kisah join users on kisah.user_id=users.id join genre on genre.kisah_id=kisah.id where user_id = ? order by kisah.id asc', [$id]);
+        $kisah = DB::select('select kisah.id as kisah_id, users.id as user_id, users.name, users.icon, judul, sinopsis, isi, genre, like, dislike, komen.textkomen  from kisah join users on kisah.user_id=users.id join genre on genre.kisah_id=kisah.id join komen on komen.kisah_id=kisah.id where user_id = ? order by kisah.id asc', [$id]);
 
         $grouped = [];
 
@@ -69,5 +69,11 @@ class kisahController extends Controller
             }
         }
         return array_values($grouped);
+    }
+
+    public function getJudul()
+    {
+        $title = DB::select('select judul from kisah;');
+        return $title;
     }
 }
