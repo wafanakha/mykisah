@@ -22,6 +22,13 @@ return new class extends Migration
             $table->timestamps();
         });
 
+        Schema::create('follow', function (Blueprint $table) {
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('following_id');
+
+            $table->foreign('user_id')->references('id')->on('users');
+        });
+
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();
             $table->string('token');
