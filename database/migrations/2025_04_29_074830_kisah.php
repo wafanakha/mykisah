@@ -12,13 +12,20 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('kisah', function (Blueprint $table) {
-            $table -> id();
-            $table -> string('judul');
-            $table -> string('sinopsis');
-            $table -> unsignedBigInteger('user_id');
-            $table -> mediumText('isi');
+            $table->id();
+            $table->string('judul');
+            $table->string('sinopsis');
+            $table->unsignedBigInteger('user_id');
+            $table->mediumText('isi');
 
-            $table ->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users');
+        });
+
+        Schema::create('genre', function (Blueprint $table) {
+            $table->unsignedBigInteger('kisah_id');
+            $table->enum('genre', ['Romance', 'Fantasy', 'Horror', 'Misteri', 'Laga', 'Sejarah', 'Fiksi Ilmiah', 'Petualangan']);
+
+            $table->foreign('kisah_id')->references('id')->on('kisah');
         });
     }
 
