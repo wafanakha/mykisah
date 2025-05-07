@@ -19,6 +19,7 @@ return new class extends Migration
             $table->mediumText('isi');
             $table->integer('like')->default(0);
             $table->integer('dislike')->default(0);
+            $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');
         });
@@ -32,9 +33,12 @@ return new class extends Migration
 
         Schema::create('komen', function (Blueprint $table) {
             $table->unsignedBigInteger('kisah_id');
+            $table->unsignedBigInteger('user_id');
             $table->text('textkomen');
+            $table->timestamps();
 
             $table->foreign('kisah_id')->references('id')->on('kisah');
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 

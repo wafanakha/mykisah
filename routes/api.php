@@ -18,10 +18,9 @@ Route::get('/user/{user}', function (User $user) {
 
 Route::get('user', [userController::class, 'getbyName']);
 
-Route::get('kisah', [kisahController::class, 'getUserKisah']);
+Route::get('kisah/user', [kisahController::class, 'getUserKisah']);
 Route::get('kisah', [kisahController::class, 'getKisah']);
-Route::get('kisah/judul', [kisahController::class, 'getJudul']);
 Route::get('kisah/all', [kisahController::class, 'getAllkisah']);
 
 Route::get('/api/auth/google/redirect', [GoogleAuthController::class, 'redirect'])->name('auth.google.redirect');
-Route::get('/api/auth/google/cphpphpallback', [GoogleAuthController::class, 'callback'])->name('auth.google.callback');
+Route::get('/api/auth/google/callback', [GoogleAuthController::class, 'callback'])->name('auth.google.callback');
