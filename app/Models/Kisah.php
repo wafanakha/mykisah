@@ -19,6 +19,6 @@ class Kisah extends Model
 
     public function genre()
     {
-        return $this->hasOne(genre::class);
+        return $this->hasMany(genre::class);
     }
 }
