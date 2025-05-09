@@ -12,6 +12,12 @@ class Kisah extends Model
 
     protected $table = 'kisah';
 
+    protected $fillable = [
+        'judul',
+        'sinopsis',
+        'user_id',
+        'isi',
+    ];
     public function user()
     {
         return $this->belongsTo(User::class);

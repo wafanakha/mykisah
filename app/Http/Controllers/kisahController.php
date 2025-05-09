@@ -3,10 +3,23 @@
 namespace App\Http\Controllers;
 
 use App\Models\Kisah;
+use App\Models\genre;
 use Illuminate\Http\Request;
 
 class kisahController extends Controller
 {
+
+    public function getAllKisah()
+    {
+        return Kisah::with('user', 'genres', 'comments')->get();
+    }
+
+    public function show(Request $request)
+    {
+        $id = $request->query('id');
+        return Kisah::with('user', 'genres', 'comments')->findOrFail($id);
+    }
+
     public function getUserKisah(Request $request)
     {
         $id = $request->query('id');
@@ -18,41 +31,54 @@ class kisahController extends Controller
     }
 
 
-    public function getAllKisah()
-    {
-        return Kisah::with('user', 'genres', 'comments')->get();
-    }
+
 
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'judul' => 'required',
-            'sinopsis' => 'required',
-            'isi' => 'required',
+            'judul' => 'required|string|max:255',
+            'sinopsis' => 'required|string|max:255',
+            'isi' => 'required|string',
             'user_id' => 'required|exists:users,id',
+            'genres' => 'required|array',
+            'genres.*' => 'in:Romance,Fantasy,Horror,Misteri,Laga,Sejarah,Fiksi Ilmiah,Petualangan'
         ]);
 
-        $kisah = Kisah::create($validated);
+        // Simpan kisah
+        $kisah = Kisah::create([
+            'judul' => $validated['judul'],
+            'sinopsis' => $validated['sinopsis'],
+            'isi' => $validated['isi'],
+            'user_id' => $validated['user_id'],
+            'like' => 0,
+            'dislike' => 0,
+        ]);
 
-        return response()->json($kisah, 201);
+        // Simpan genre
+        foreach ($validated['genres'] as $genre) {
+            genre::create([
+                'kisah_id' => $kisah->id,
+                'genre' => $genre
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'Kisah dan genre berhasil dibuat',
+            'kisah' => $kisah->load('genres', 'user')
+        ], 201);
     }
 
-    public function show(Request $request)
-    {
-        $id = $request->query('id');
-        return Kisah::with('user', 'genres', 'comments')->findOrFail($id);
-    }
 
-    public function update(Request $request, $id)
-    {
-        $kisah = Kisah::findOrFail($id);
-        $kisah->update($request->only(['judul', 'sinopsis', 'isi']));
-        return response()->json($kisah);
-    }
+    // public function update(Request $request, $id)
+    // {
+    //     $kisah = Kisah::findOrFail($id);
+    //     $kisah->update($request->only(['judul', 'sinopsis', 'isi']));
+    //     return response()->json($kisah);
+    // }
 
-    public function destroy($id)
-    {
-        Kisah::destroy($id);
-        return response()->json(['message' => 'Deleted']);
-    }
+    // public function destroy($id)
+    // {
+    //     Kisah::destroy($id);
+    //     return response()->json(['message' => 'Deleted']);
+    // }
 }

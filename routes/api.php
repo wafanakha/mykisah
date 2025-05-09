@@ -20,6 +20,7 @@ Route::get('user', [userController::class, 'getbyName']);
 
 Route::get('kisah/user', [kisahController::class, 'getUserKisah']);
 Route::get('kisah', [kisahController::class, 'show']);
+Route::post('kisah/create', [kisahController::class, 'store']);
 Route::get('kisah/all', [kisahController::class, 'getAllkisah']);
 
 Route::get('/api/auth/google/redirect', [GoogleAuthController::class, 'redirect'])->name('auth.google.redirect');

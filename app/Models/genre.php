@@ -11,6 +11,11 @@ class genre extends Model
     use HasFactory;
     public $timestamps = false;
 
+    protected $fillable = [
+        'kisah_id',
+        'genre',
+    ];
+
     protected $table = 'genre';
 
     public function kisah()
