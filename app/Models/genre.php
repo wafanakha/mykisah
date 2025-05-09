@@ -15,6 +15,6 @@ class genre extends Model
 
     public function kisah()
     {
-        return $this->belongsTo(kisah::class);
+        return $this->belongsTo(Kisah::class);
     }
 }

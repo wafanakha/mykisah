@@ -19,7 +19,7 @@ Route::get('/user/{user}', function (User $user) {
 Route::get('user', [userController::class, 'getbyName']);
 
 Route::get('kisah/user', [kisahController::class, 'getUserKisah']);
-Route::get('kisah', [kisahController::class, 'getKisah']);
+Route::get('kisah', [kisahController::class, 'show']);
 Route::get('kisah/all', [kisahController::class, 'getAllkisah']);
 
 Route::get('/api/auth/google/redirect', [GoogleAuthController::class, 'redirect'])->name('auth.google.redirect');

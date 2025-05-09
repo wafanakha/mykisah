@@ -17,8 +17,18 @@ class Kisah extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function genre()
+    public function genres()
     {
         return $this->hasMany(genre::class);
+    }
+
+    public function bookmarks()
+    {
+        return $this->belongsToMany(User::class, 'bookmark');
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(komen::class);
     }
 }

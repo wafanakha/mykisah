@@ -4,89 +4,55 @@ namespace App\Http\Controllers;
 
 use App\Models\Kisah;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class kisahController extends Controller
 {
     public function getUserKisah(Request $request)
     {
-        $id = $request->query('user');
-        $kisah = DB::select(
-            'SELECT 
-                kisah.id AS kisah_id,
-                users.id AS user_id,
-                users.name,
-                users.avatar,
-                kisah.judul,
-                kisah.sinopsis,
-                kisah.isi,
-                genre.genre,
-                `like`,
-                `dislike`,
-                komen.user_id AS komen_user_id,
-                komen.kisah_id AS komen_kisah_id,
-                komen.textkomen
-            FROM kisah
-            JOIN users ON kisah.user_id = users.id
-            JOIN genre ON genre.kisah_id = kisah.id
-            JOIN komen ON komen.kisah_id = kisah.id
-            WHERE users.id = ?
-            ORDER BY kisah.id ASC',
-            [$id]
-        );
-
-        $grouped = [];
-
-        foreach ($kisah as $kis) {
-            $id = $kis->kisah_id;
-
-            if (!isset($grouped[$id])) {
-                $grouped[$id] = $kis;
-                $grouped[$id]->genre = [$kis->genre];
-            } else {
-                if (!in_array($kis->genre, $grouped[$id]->genre)) {
-                    $grouped[$id]->genre[] = $kis->genre;
-                }
-            }
-        }
-        return array_values($grouped);
-    }
-
-    public function getKisah(Request $request)
-    {
         $id = $request->query('id');
-        $kisah = Kisah::with(['user:id,name,avatar', 'genre'])
-            ->where('id', $id)
+        $kisahList = Kisah::with(['user', 'genres', 'comments.user'])
+            ->where('user_id', $id)
             ->get();
 
-
-        return ($kisah);
+        return response()->json($kisahList);
     }
+
 
     public function getAllKisah()
     {
-        $kisah = Kisah::with(['user:id,name,avatar', 'genre:genre'])->get();
-
-        $grouped = [];
-
-        foreach ($kisah as $kis) {
-            $id = $kis->kisah_id;
-
-            if (!isset($grouped[$id])) {
-                $grouped[$id] = $kis;
-                $grouped[$id]->genre = [$kis->genre];
-            } else {
-                if (!in_array($kis->genre, $grouped[$id]->genre)) {
-                    $grouped[$id]->genre[] = $kis->genre;
-                }
-            }
-        }
-        return array_values($grouped);
+        return Kisah::with('user', 'genres', 'comments')->get();
     }
 
-    public function getJudul()
+    public function store(Request $request)
     {
-        $title = DB::select('select judul from kisah;');
-        return $title;
+        $validated = $request->validate([
+            'judul' => 'required',
+            'sinopsis' => 'required',
+            'isi' => 'required',
+            'user_id' => 'required|exists:users,id',
+        ]);
+
+        $kisah = Kisah::create($validated);
+
+        return response()->json($kisah, 201);
+    }
+
+    public function show(Request $request)
+    {
+        $id = $request->query('id');
+        return Kisah::with('user', 'genres', 'comments')->findOrFail($id);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $kisah = Kisah::findOrFail($id);
+        $kisah->update($request->only(['judul', 'sinopsis', 'isi']));
+        return response()->json($kisah);
+    }
+
+    public function destroy($id)
+    {
+        Kisah::destroy($id);
+        return response()->json(['message' => 'Deleted']);
     }
 }

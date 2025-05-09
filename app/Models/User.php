@@ -60,6 +60,21 @@ class User extends Authenticatable
 
     public function kisah()
     {
-        return $this->hasMany(kisah::class);
+        return $this->hasMany(Kisah::class);
+    }
+
+    public function bookmarks()
+    {
+        return $this->belongsToMany(Kisah::class, 'bookmark');
+    }
+
+    public function follows()
+    {
+        return $this->belongsToMany(User::class, 'follow', 'user_id', 'following_id');
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(komen::class);
     }
 }

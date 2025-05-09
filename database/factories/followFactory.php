@@ -8,7 +8,7 @@ use App\Models\User;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\follow>
  */
-class FollowFactory extends Factory
+class followFactory extends Factory
 {
     /**
      * Define the model's default state.
