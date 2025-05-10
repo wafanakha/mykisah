@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class kisahController extends Controller
 {
 
-    public function getAllKisah()
+    public function showAll()
     {
         return Kisah::with('user', 'genres', 'comments')->get();
     }
@@ -29,9 +29,6 @@ class kisahController extends Controller
 
         return response()->json($kisahList);
     }
-
-
-
 
     public function store(Request $request)
     {
@@ -61,7 +58,7 @@ class kisahController extends Controller
         }
 
         return response()->json([
-            'message' => 'Kisah dan genre berhasil dibuat',
+            'message' => 'Kisah dan genre Dibuat!',
             'kisah' => $kisah->load('genres', 'user')
         ], 201);
     }
@@ -76,7 +73,7 @@ class kisahController extends Controller
         $kisah->bookmarks()->detach();
         $kisah->delete();
 
-        return response()->json(['message' => 'Kisah dan data terkait berhasil dihapus']);
+        return response()->json(['message' => 'Kisah Dihapus!']);
     }
 
     public function update(Request $request, $id)
