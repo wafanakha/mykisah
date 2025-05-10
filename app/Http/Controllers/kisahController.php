@@ -14,17 +14,29 @@ class kisahController extends Controller
         return Kisah::with('user', 'genres', 'comments')->get();
     }
 
-    public function show(Request $request)
+    public function show($id)
     {
-        $id = $request->query('id');
         return Kisah::with('user', 'genres', 'comments')->findOrFail($id);
     }
 
-    public function getUserKisah(Request $request)
+    public function getUserKisah($id)
     {
-        $id = $request->query('id');
         $kisahList = Kisah::with(['user', 'genres', 'comments.user'])
             ->where('user_id', $id)
+            ->get();
+
+        return response()->json($kisahList);
+    }
+
+    public function getUserKisahSorted($id, $order = 'asc')
+    {
+        if (!in_array($order, ['asc', 'desc'])) {
+            return response()->json(['error' => 'Invalid sort direction'], 400);
+        }
+
+        $kisahList = Kisah::with(['genres', 'comments', 'user'])
+            ->where('user_id', $id)
+            ->orderBy('created_at', $order)
             ->get();
 
         return response()->json($kisahList);
@@ -58,14 +70,13 @@ class kisahController extends Controller
         }
 
         return response()->json([
-            'message' => 'Kisah dan genre Dibuat!',
+            'message' => 'Kisah dan genre Ditambah!',
             'kisah' => $kisah->load('genres', 'user')
         ], 201);
     }
 
-    public function destroy(Request $request)
+    public function destroy($id)
     {
-        $id = $request->query('id');
         $kisah = Kisah::findOrFail($id);
 
         $kisah->genres()->delete();

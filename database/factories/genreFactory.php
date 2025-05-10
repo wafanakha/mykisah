@@ -8,7 +8,7 @@ use App\Models\Kisah;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\genre>
  */
-class GenreFactory extends Factory
+class genreFactory extends Factory
 {
     /**
      * Define the model's default state.
