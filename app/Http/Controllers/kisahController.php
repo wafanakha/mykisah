@@ -9,14 +9,31 @@ use Illuminate\Http\Request;
 class kisahController extends Controller
 {
 
+
+    public function show($id)
+    {
+        return Kisah::with('user', 'genres', 'comments')->findOrFail($id);
+    }
+
     public function showAll()
     {
         return Kisah::with('user', 'genres', 'comments')->get();
     }
 
-    public function show($id)
+    public function getKisahSearch()
     {
-        return Kisah::with('user', 'genres', 'comments')->findOrFail($id);
+        $kisahList = Kisah::select('kisah.id', 'kisah.judul', 'kisah.user_id')
+            ->get()
+            ->map(function ($kisah) {
+                return [
+                    'id' => $kisah->id,
+                    'judul' => $kisah->judul,
+                    'user_name' => $kisah->user->name,
+                    'genres' => $kisah->genres->pluck('genre') // return array of genres
+                ];
+            });
+
+        return response()->json($kisahList);
     }
 
     public function getUserKisah($id)
