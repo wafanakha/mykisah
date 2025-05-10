@@ -44,7 +44,6 @@ class kisahController extends Controller
             'genres.*' => 'in:Romance,Fantasy,Horror,Misteri,Laga,Sejarah,Fiksi Ilmiah,Petualangan'
         ]);
 
-        // Simpan kisah
         $kisah = Kisah::create([
             'judul' => $validated['judul'],
             'sinopsis' => $validated['sinopsis'],
@@ -54,7 +53,6 @@ class kisahController extends Controller
             'dislike' => 0,
         ]);
 
-        // Simpan genre
         foreach ($validated['genres'] as $genre) {
             genre::create([
                 'kisah_id' => $kisah->id,
@@ -68,17 +66,23 @@ class kisahController extends Controller
         ], 201);
     }
 
+    public function destroy(Request $request)
+    {
+        $id = $request->query('id');
+        $kisah = Kisah::findOrFail($id);
 
-    // public function update(Request $request, $id)
-    // {
-    //     $kisah = Kisah::findOrFail($id);
-    //     $kisah->update($request->only(['judul', 'sinopsis', 'isi']));
-    //     return response()->json($kisah);
-    // }
+        $kisah->genres()->delete();
+        $kisah->comments()->delete();
+        $kisah->bookmarks()->detach();
+        $kisah->delete();
 
-    // public function destroy($id)
-    // {
-    //     Kisah::destroy($id);
-    //     return response()->json(['message' => 'Deleted']);
-    // }
+        return response()->json(['message' => 'Kisah dan data terkait berhasil dihapus']);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $kisah = Kisah::findOrFail($id);
+        $kisah->update($request->only(['judul', 'sinopsis', 'isi']));
+        return response()->json($kisah);
+    }
 }
