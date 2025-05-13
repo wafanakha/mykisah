@@ -21,6 +21,7 @@ Route::get('/user/{user}', function (User $user) {
 
 
 Route::get('user', [userController::class, 'getbyName']);
+Route::post('user/uploadAvatar', [userController::class, 'storeAvatar'])->middleware('auth:sanctum');
 
 Route::post('kisah/create', [kisahController::class, 'store']);
 Route::get('kisah/search', [kisahController::class, 'getKisahSearch']);

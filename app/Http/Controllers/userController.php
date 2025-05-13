@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Auth;
 
 class userController extends Controller
 {
@@ -19,5 +19,29 @@ class userController extends Controller
         $users = User::where('name', 'like', '%' . $name . '%')->get();
 
         return response()->json($users);
+    }
+
+    public function storeAvatar(Request $request)
+    {
+        $user = User::find(Auth::id());
+
+        $request->validate([
+            'avatar' => 'required|image|mimes:jpg,jpeg,png,gif|max:2048',
+        ]);
+
+        $file = $request->file('avatar');
+        $filename = time() . '_' . $file->getClientOriginalName();
+
+        $file->move(public_path('images'), $filename);
+
+        $imageUrl = 'images/' . $filename;
+        $user->avatar = $imageUrl;
+        $user->save(); // 
+
+        return response()->json([
+            'message' => 'Image uploaded successfully',
+            'path' => $imageUrl,
+            'url' => asset($imageUrl),
+        ]);
     }
 }
