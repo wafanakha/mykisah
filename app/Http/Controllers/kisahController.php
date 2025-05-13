@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Kisah;
 use App\Models\genre;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class kisahController extends Controller
 {
@@ -29,7 +30,7 @@ class kisahController extends Controller
                     'id' => $kisah->id,
                     'judul' => $kisah->judul,
                     'user_name' => $kisah->user->name,
-                    'genres' => $kisah->genres->pluck('genre') // return array of genres
+                    'genres' => $kisah->genres->pluck('genre')
                 ];
             });
 

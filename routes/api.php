@@ -1,11 +1,14 @@
 <?php
 
+use App\Http\Controllers\authController;
 use App\Http\Controllers\kisahController;
 use App\Http\Controllers\userController;
 use App\Http\Controllers\GoogleAuthController;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
+Route::post('/sanctum/token', [authController::class, 'login']);
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -16,11 +19,12 @@ Route::get('/user/{user}', function (User $user) {
     return $user;
 });
 
+
 Route::get('user', [userController::class, 'getbyName']);
 
-Route::get('kisah/search', [kisahController::class, 'getKisahSearch']);
-Route::get('kisah/all', [kisahController::class, 'showAll']);
 Route::post('kisah/create', [kisahController::class, 'store']);
+Route::get('kisah/search', [kisahController::class, 'getKisahSearch']);
+Route::get('kisah/all', [kisahController::class, 'showAll'])->middleware('auth:sanctum');
 Route::get('kisah/user/{id}', [kisahController::class, 'getUserKisah']);
 Route::get('kisah/user/{id}/sort/{order}', [kisahController::class, 'getUserKisahSorted']);
 Route::get('kisah/{id}', [kisahController::class, 'show']);
