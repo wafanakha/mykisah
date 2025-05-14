@@ -20,17 +20,20 @@ Route::get('/user/{user}', function (User $user) {
 });
 
 
-Route::get('user', [userController::class, 'getbyName']);
+Route::get('user', [userController::class, 'getbyName'])->middleware('auth:sanctum');
 Route::post('user/uploadAvatar', [userController::class, 'storeAvatar'])->middleware('auth:sanctum');
+Route::get('user/getAvatar', [userController::class, 'getAvatar'])->middleware('auth:sanctum');
 
-Route::post('kisah/create', [kisahController::class, 'store']);
-Route::get('kisah/search', [kisahController::class, 'getKisahSearch']);
+
+
+Route::post('kisah/create', [kisahController::class, 'store'])->middleware('auth:sanctum');
+Route::get('kisah/search', [kisahController::class, 'getKisahSearch'])->middleware('auth:sanctum');
 Route::get('kisah/all', [kisahController::class, 'showAll'])->middleware('auth:sanctum');
-Route::get('kisah/user/{id}', [kisahController::class, 'getUserKisah']);
-Route::get('kisah/user/{id}/sort/{order}', [kisahController::class, 'getUserKisahSorted']);
-Route::get('kisah/{id}', [kisahController::class, 'show']);
-Route::delete('kisah/delete/{id}', [kisahController::class, 'destroy']);
-Route::patch('kisah/update/{id}', [kisahController::class, 'update']);
+Route::get('kisah/user/{id}', [kisahController::class, 'getUserKisah'])->middleware('auth:sanctum');
+Route::get('kisah/user/{id}/sort/{order}', [kisahController::class, 'getUserKisahSorted'])->middleware('auth:sanctum');
+Route::get('kisah/{id}', [kisahController::class, 'show'])->middleware('auth:sanctum');
+Route::delete('kisah/delete/{id}', [kisahController::class, 'destroy'])->middleware('auth:sanctum');
+Route::patch('kisah/update/{id}', [kisahController::class, 'update'])->middleware('auth:sanctum');
 
 
 // Route::get('/api/auth/google/redirect', [GoogleAuthController::class, 'redirect'])->name('auth.google.redirect');
