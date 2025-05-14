@@ -10,20 +10,15 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/sanctum/token', [authController::class, 'login']);
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
 
+Route::get('user', [userController::class, 'getbyName'])->middleware('auth:sanctum');
+Route::get('user/all', [userController::class, 'showAll'])->middleware('auth:sanctum');
+Route::post('user/uploadAvatar', [userController::class, 'storeAvatar'])->middleware('auth:sanctum');
+Route::get('user/getAvatar', [userController::class, 'getAvatar'])->middleware('auth:sanctum');
 
 Route::get('/user/{user}', function (User $user) {
     return $user;
 });
-
-
-Route::get('user', [userController::class, 'getbyName'])->middleware('auth:sanctum');
-Route::post('user/uploadAvatar', [userController::class, 'storeAvatar'])->middleware('auth:sanctum');
-Route::get('user/getAvatar', [userController::class, 'getAvatar'])->middleware('auth:sanctum');
-
 
 
 Route::post('kisah/create', [kisahController::class, 'store'])->middleware('auth:sanctum');

@@ -22,6 +22,11 @@ class userController extends Controller
         return response()->json($users);
     }
 
+    public function showAll()
+    {
+        return User::all();
+    }
+
     public function storeAvatar(Request $request)
     {
         $user = User::find(Auth::id());
@@ -31,7 +36,7 @@ class userController extends Controller
         ]);
 
         $file = $request->file('avatar');
-        $filename = time() . '_' . $file->getClientOriginalName();
+        $filename = time() . '_' . $user->id . '.' . $file->extension();
 
         $file->move(public_path('images'), $filename);
 
@@ -49,6 +54,12 @@ class userController extends Controller
     public function getAvatar()
     {
         $user = User::find(Auth::id());
-        return Storage::get($user->avatar);
+        $path = public_path($user->avatar);
+
+        if (!file_exists($path)) {
+            return response()->json(['message' => 'Image not found'], 404);
+        }
+
+        return response()->file($path);
     }
 }
