@@ -1,5 +1,5 @@
--   laravel > 12
--   php > 8.4
+-   laravel 12
+-   php 8.x
 
 to run on your machine:
 
