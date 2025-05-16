@@ -8,9 +8,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class komen extends Model
 {
+    use HasFactory;
+
     protected $table = 'komen';
 
-    use HasFactory;
+    protected $fillable = [
+        'isi',
+        'user_id',
+        'kisah_id',
+    ];
 
     public function user()
     {

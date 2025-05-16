@@ -4,6 +4,7 @@ use App\Http\Controllers\authController;
 use App\Http\Controllers\kisahController;
 use App\Http\Controllers\userController;
 use App\Http\Controllers\followController;
+use App\Http\Controllers\komenController;
 use App\Http\Controllers\GoogleAuthController;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -49,6 +50,12 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/user/{id}/followers', [FollowController::class, 'followersOf']);
     Route::get('/user/{id}/followings', [FollowController::class, 'followingsOf']);
+});
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/komen', [komenController::class, 'store']);
+    Route::get('/komen/kisah/{id}', [komenController::class, 'getByKisah']);
+    Route::delete('/komen/{id}', [komenController::class, 'destroy']);
 });
 
 // Route::get('/api/auth/google/redirect', [GoogleAuthController::class, 'redirect'])->name('auth.google.redirect');

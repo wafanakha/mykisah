@@ -101,7 +101,7 @@ class kisahController extends Controller
         } else {
             $kisah->genres()->delete();
             $kisah->comments()->delete();
-            $kisah->bookmarks()->detach();
+            $kisah->bookmarkedBy()->detach();
             $kisah->delete();
             return response()->json(['message' => 'Kisah Dihapus!']);
         }
