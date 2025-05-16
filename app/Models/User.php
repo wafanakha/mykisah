@@ -49,9 +49,7 @@ class User extends Authenticatable
         ];
     }
 
-    /**
-     * Get the user's initials
-     */
+
     public function initials(): string
     {
         return Str::of($this->name)
@@ -70,9 +68,16 @@ class User extends Authenticatable
         return $this->belongsToMany(Kisah::class, 'bookmark');
     }
 
+    // relasi ke yang difollow
     public function follows()
     {
         return $this->belongsToMany(User::class, 'follow', 'user_id', 'following_id');
+    }
+
+    // relasi ke follower
+    public function followers()
+    {
+        return $this->belongsToMany(User::class, 'follow', 'following_id', 'user_id');
     }
 
     public function comments()
