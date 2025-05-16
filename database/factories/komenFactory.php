@@ -22,7 +22,7 @@ class komenFactory extends Factory
         return [
             'kisah_id' => Kisah::inRandomOrder()->first()->id ?? Kisah::factory(),
             'user_id' => User::inRandomOrder()->first()->id ?? User::factory(),
-            'textkomen' => fake()->sentence(10),
+            'isi' => fake()->sentence(10),
         ];
     }
 }

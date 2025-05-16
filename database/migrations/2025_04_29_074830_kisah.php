@@ -32,9 +32,10 @@ return new class extends Migration
         });
 
         Schema::create('komen', function (Blueprint $table) {
+            $table->id();
             $table->unsignedBigInteger('kisah_id');
             $table->unsignedBigInteger('user_id');
-            $table->text('textkomen');
+            $table->text('isi');
             $table->timestamps();
 
             $table->foreign('kisah_id')->references('id')->on('kisah');
@@ -47,8 +48,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('kisah');
-        Schema::dropIfExists('komen');
         Schema::dropIfExists('genre');
+        Schema::dropIfExists('komen');
+        Schema::dropIfExists('kisah');
     }
 };
