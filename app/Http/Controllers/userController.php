@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Kisah;
+use App\Models\bookmark;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -61,5 +63,32 @@ class userController extends Controller
         }
 
         return response()->file($path);
+    }
+
+
+    public function addBookmark(Request $request)
+    {
+        $request->validate([
+            'kisah_id' => 'required|exists:kisah,id',
+        ]);
+
+        $user = User::find(Auth::id());
+
+        if ($user->bookmarks()->where('kisah_id', $request->kisah_id)->exists()) {
+            return response()->json(['message' => 'Kisah sudah di-bookmark.'], 409);
+        }
+
+        $user->bookmarks()->attach($request->kisah_id);
+
+        return response()->json(['message' => 'Bookmark berhasil ditambahkan.']);
+    }
+
+    public function getBookmark()
+    {
+        $user = User::find(Auth::id());
+
+        $bookmarks = $user->bookmarks()->with('genres', 'user')->get();
+
+        return response()->json($bookmarks);
     }
 }

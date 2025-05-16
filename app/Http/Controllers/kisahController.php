@@ -66,7 +66,6 @@ class kisahController extends Controller
             'judul' => 'required|string|max:255',
             'sinopsis' => 'required|string|max:255',
             'isi' => 'required|string',
-            'user_id' => 'required|exists:users,id',
             'genres' => 'required|array',
             'genres.*' => 'in:Romance,Fantasy,Horror,Misteri,Laga,Sejarah,Fiksi Ilmiah,Petualangan'
         ]);
@@ -75,7 +74,7 @@ class kisahController extends Controller
             'judul' => $validated['judul'],
             'sinopsis' => $validated['sinopsis'],
             'isi' => $validated['isi'],
-            'user_id' => $validated['user_id'],
+            'user_id' => Auth::id(),
             'like' => 0,
             'dislike' => 0,
         ]);
@@ -97,18 +96,53 @@ class kisahController extends Controller
     {
         $kisah = Kisah::findOrFail($id);
 
-        $kisah->genres()->delete();
-        $kisah->comments()->delete();
-        $kisah->bookmarks()->detach();
-        $kisah->delete();
-
-        return response()->json(['message' => 'Kisah Dihapus!']);
+        if ($kisah->user_id != Auth::id()) {
+            return response()->json(['message' => 'Kisah bukan dimiliki user!'], 403);
+        } else {
+            $kisah->genres()->delete();
+            $kisah->comments()->delete();
+            $kisah->bookmarks()->detach();
+            $kisah->delete();
+            return response()->json(['message' => 'Kisah Dihapus!']);
+        }
     }
 
     public function update(Request $request, $id)
     {
         $kisah = Kisah::findOrFail($id);
-        $kisah->update($request->only(['judul', 'sinopsis', 'isi']));
-        return response()->json($kisah);
+
+        if ($kisah->user_id != Auth::id()) {
+            return response()->json(['message' => 'Kisah bukan dimiliki user!'], 403);
+        }
+
+        $validated = $request->validate([
+            'judul' => 'sometimes|required|string|max:255',
+            'sinopsis' => 'sometimes|required|string|max:255',
+            'isi' => 'sometimes|required|string',
+            'genres' => 'nullable|array',
+            'genres.*' => 'in:Romance,Fantasy,Horror,Misteri,Laga,Sejarah,Fiksi Ilmiah,Petualangan'
+        ]);
+
+        // Update only provided fields
+        $kisah->fill($validated);
+        $kisah->save();
+
+        if (isset($validated['genres'])) {
+            // Hapus genre lama
+            $kisah->genres()->delete();
+
+            // Tambah genre baru
+            foreach ($validated['genres'] as $genre) {
+                \App\Models\genre::create([
+                    'kisah_id' => $kisah->id,
+                    'genre' => $genre
+                ]);
+            }
+        }
+
+        return response()->json([
+            'message' => 'Kisah berhasil diperbarui',
+            'kisah' => $kisah->load('genres', 'user')
+        ]);
     }
 }

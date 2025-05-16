@@ -16,6 +16,9 @@ Route::get('user/all', [userController::class, 'showAll'])->middleware('auth:san
 Route::post('user/uploadAvatar', [userController::class, 'storeAvatar'])->middleware('auth:sanctum');
 Route::get('user/getAvatar', [userController::class, 'getAvatar'])->middleware('auth:sanctum');
 
+Route::post('user/addBookmark', [userController::class, 'addBookmark'])->middleware('auth:sanctum');
+Route::get('user/getBookmark', [userController::class, 'getBookmark'])->middleware('auth:sanctum');
+
 Route::get('/user/{user}', function (User $user) {
     return $user;
 });

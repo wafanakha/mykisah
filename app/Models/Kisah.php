@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
 
 class Kisah extends Model
 {
@@ -28,7 +29,7 @@ class Kisah extends Model
         return $this->hasMany(genre::class);
     }
 
-    public function bookmarks()
+    public function bookmarkedBy()
     {
         return $this->belongsToMany(User::class, 'bookmark');
     }
