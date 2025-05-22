@@ -3,7 +3,8 @@
 
 to run on your machine:
 
-1. composer install
-2. add mysql connection on .env
-3. enter command "php artisan migrate --seed"
-4. and "php artisan serve"
+1. npm install && npm run build
+2. composer install
+3. add mysql connection on .env
+4. enter command "php artisan migrate --seed"
+5. and "php artisan serve"
