@@ -145,4 +145,18 @@ class kisahController extends Controller
             'kisah' => $kisah->load('genres', 'user')
         ]);
     }
+
+    // buat website
+    public function index()
+    {
+        $kisahList = Kisah::with(['user', 'genres'])->latest()->get();
+        return view('dashboard', compact('kisahList'));
+    }
+
+    public function show_kisah($id)
+    {
+        $kisah = Kisah::with(['user', 'genres', 'comments.user'])->findOrFail($id);
+
+        return view('kisah.show', compact('kisah'));
+    }
 }

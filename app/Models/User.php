@@ -84,4 +84,11 @@ class User extends Authenticatable
     {
         return $this->hasMany(komen::class);
     }
+
+    public function getAvatarUrlAttribute()
+    {
+        return $this->avatar
+            ? asset('storage/' . $this->avatar)
+            : 'https://ui-avatars.com/api/?name=' . urlencode(Str::title($this->name)) . '&color=7F9CF5&background=EBF4FF';
+    }
 }

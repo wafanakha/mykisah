@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\GoogleAuthController;
+use App\Http\Controllers\kisahController;
+use App\Http\Controllers\komenController;
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 
@@ -24,5 +26,8 @@ Route::middleware(['auth'])->group(function () {
 Route::get('/auth/google/redirect', [GoogleAuthController::class, 'redirect'])->name('auth.google.redirect');
 Route::get('/api/auth/google/callback', [GoogleAuthController::class, 'callback'])->name('auth.google.callback');
 
+Route::get('/dashboard', [kisahController::class, 'index'])->middleware(['auth'])->name('dashboard');
+Route::get('/kisah/{id}', [KisahController::class, 'show_kisah'])->name('kisah.show');
+Route::post('/komen', [komenController::class, 'store'])->name('komen.store');
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

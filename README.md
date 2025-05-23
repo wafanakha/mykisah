@@ -1,5 +1,6 @@
 -   laravel 12
 -   php 8.x
+-   node 22
 
 to run on your machine:
 
