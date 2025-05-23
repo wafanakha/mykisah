@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/sanctum/token', [authController::class, 'login']);
-
+Route::post('/register', [AuthController::class, 'register']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('user', [userController::class, 'getbyName']);
@@ -58,5 +58,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/komen/{id}', [komenController::class, 'destroy']);
 });
 
-// Route::get('/api/auth/google/redirect', [GoogleAuthController::class, 'redirect'])->name('auth.google.redirect');
-// Route::get('/api/auth/google/callback', [GoogleAuthController::class, 'callback'])->name('auth.google.callback');
+Route::get('/mobile/auth/google/redirect', [GoogleAuthController::class, 'redirect'])->name('auth.google.redirect');
+Route::get('/mobile/auth/google/callback', [GoogleAuthController::class, 'callback'])->name('auth.google.callback');
