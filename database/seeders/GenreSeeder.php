@@ -2,10 +2,12 @@
 
 namespace Database\Seeders;
 
-use App\Models\genre;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
 use Illuminate\Database\Seeder;
+use App\Models\Kisah;
+use App\Models\genre;
 
 class GenreSeeder extends Seeder
 {
@@ -14,6 +16,20 @@ class GenreSeeder extends Seeder
      */
     public function run(): void
     {
-        genre::factory(20)->create();
+        $availableGenres = ['Romance', 'Fantasy', 'Horror', 'Misteri', 'Laga', 'Sejarah', 'Fiksi Ilmiah', 'Petualangan'];
+
+        $kisahList = Kisah::all();
+
+        foreach ($kisahList as $kisah) {
+            // Pilih 1-3 genre acak
+            $randomGenres = collect($availableGenres)->shuffle()->take(rand(1, 3));
+
+            foreach ($randomGenres as $genreName) {
+                genre::create([
+                    'kisah_id' => $kisah->id,
+                    'genre' => $genreName,
+                ]);
+            }
+        }
     }
 }
