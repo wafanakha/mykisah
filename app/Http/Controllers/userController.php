@@ -92,9 +92,9 @@ class userController extends Controller
         return response()->json($bookmarks);
     }
 
-    public function profile()
+    public function profile($id)
     {
-        $user = Auth::user();
+        $user = User::find($id);
         $kisahList = $user->kisah()->with('genres')->latest()->get();
 
         return view('profile', compact('user', 'kisahList'));

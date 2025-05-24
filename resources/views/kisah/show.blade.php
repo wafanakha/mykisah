@@ -23,7 +23,7 @@
 
         <h2 class="text-xl font-semibold text-gray-800 dark:text-white mb-5">Komentar</h2>
         @foreach($kisah->comments as $comment)
-            <div class="flex items-start gap-3 mb-5">
+            <div class="flex items-start gap-3 mb-5 cursor-pointer" onclick="window.location='{{ route('profile', $comment->user->id) }}'">
                 <img src="{{ $comment->user->avatar_url }}" alt="{{ $comment->user->name }}" class="w-8 h-8 rounded-full">
                 <div>
                     <div class="text-sm font-semibold text-gray-900 dark:text-white">{{ $comment->user->name }}</div>

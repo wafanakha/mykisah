@@ -12,8 +12,8 @@
 
         <div class="space-y-4">
             @forelse($kisahList as $kisah)
-                <div class="p-4 border rounded-lg mb-4 bg-white dark:bg-neutral-900 shadow">
-                    <h3 class="text-lg font-bold text-gray-900 dark:text-white">{{ $kisah->judul }}</h3>
+                <div class="p-4 border rounded-lg mb-4 bg-white dark:bg-neutral-900 shadow cursor-pointer" onclick="window.location='{{ route('kisah.show', $kisah->id) }}'">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-0.5">{{ $kisah->judul }}</h3>
                     <p class="text-gray-600 dark:text-gray-300">{{ $kisah->sinopsis }}</p>
                     <div class="mt-2 flex flex-wrap gap-1 text-sm">
                         @foreach($kisah->genres as $genre)

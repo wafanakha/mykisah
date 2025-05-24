@@ -160,7 +160,7 @@ class kisahController extends Controller
         return view('dashboard', compact('kisahList', 'bookmarkedIds'));
     }
 
-    public function show_kisah($id)
+    public function web_show($id)
     {
         $kisah = Kisah::with(['user', 'genres', 'comments.user'])->findOrFail($id);
 
@@ -184,7 +184,7 @@ class kisahController extends Controller
     public function toggleBookmark($id)
     {
         $kisah = Kisah::findOrFail($id);
-        $user = Auth::user();
+        $user = User::find(Auth::id());
 
         if ($user->bookmarks()->where('kisah_id', $id)->exists()) {
             $user->bookmarks()->detach($id);

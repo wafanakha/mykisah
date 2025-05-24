@@ -28,9 +28,9 @@ Route::get('/auth/google/redirect', [GoogleAuthController::class, 'redirect'])->
 Route::get('/api/auth/google/callback', [GoogleAuthController::class, 'callback'])->name('auth.google.callback');
 
 Route::get('/dashboard', [kisahController::class, 'index'])->middleware(['auth'])->name('dashboard');
-Route::get('/kisah/{id}', [KisahController::class, 'show_kisah'])->name('kisah.show');
+Route::get('/kisah/{id}', [KisahController::class, 'web_show'])->name('kisah.show');
 Route::post('/komen', [komenController::class, 'web_store'])->name('komen.store');
 
-Route::get('/profile', [userController::class, 'profile'])->middleware('auth')->name('profile');
+Route::get('/profile/{id}', [userController::class, 'profile'])->middleware('auth')->name('profile');
 
 require __DIR__ . '/auth.php';
