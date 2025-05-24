@@ -12,15 +12,43 @@
 
         <div class="space-y-4">
             @forelse($kisahList as $kisah)
-                <div class="p-4 border rounded-lg mb-4 bg-white dark:bg-neutral-900 shadow cursor-pointer" onclick="window.location='{{ route('kisah.show', $kisah->id) }}'">
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-0.5">{{ $kisah->judul }}</h3>
-                    <p class="text-gray-600 dark:text-gray-300">{{ $kisah->sinopsis }}</p>
-                    <div class="mt-2 flex flex-wrap gap-1 text-sm">
-                        @foreach($kisah->genres as $genre)
-                            <span class="bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-100 px-2 py-0.5 rounded">
+                <div class="kisah-card border p-4 rounded-lg mb-4 bg-white dark:bg-neutral-900 shadow"
+                    data-url="{{ route('kisah.show', $kisah->id) }}">
+
+                    <div class="mt-4 flex  flex-wrap gap-1 text-sm mb-4">
+                        @foreach ($kisah->genres as $genre)
+                            <span
+                                class="bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-100 px-2 py-0.5 border p-2  rounded-lg">
                                 {{ $genre->genre }}
                             </span>
                         @endforeach
+                    </div>
+
+                    <div onclick="window.location='{{ route('kisah.show', $kisah->id) }}'" class="cursor-pointer">
+                        <div class="text-lg font-semibold text-gray-900 dark:text-white mb-0.5">
+                            {{ $kisah->judul }}
+                        </div>
+                        <p class="text-gray-600 dark:text-gray-300">{{ $kisah->sinopsis }}</p>
+                    </div>
+
+                    <div class="mt-0.5 flex gap-4 text-sm text-gray-600 dark:text-gray-300">
+                        <!-- Like Button -->
+                        <button class="btn-like border p-2 rounded-lg mt-4" data-kisah-id="{{ $kisah->id }}">
+                            👍 <span class="like-count">{{ $kisah->like }}</span>
+                        </button>
+
+                        <!-- Dislike Button -->
+                        <button class="btn-dislike border p-2 rounded-lg mt-4" data-kisah-id="{{ $kisah->id }}">
+                            👎 <span class="dislike-count">{{ $kisah->dislike }}</span>
+                        </button>
+
+                        <!-- Bookmark Button -->
+                        <button
+                            class="btn-bookmark border p-2 rounded-lg mt-4  {{ $kisah->bookmarkedBy->contains(auth()->id()) ? 'text-yellow-500' : '' }}"
+                            data-kisah-id="{{ $kisah->id }}">
+                            📌 <span
+                                class="bookmark-label">{{ $kisah->bookmarkedBy->contains(auth()->id()) ? 'Bookmarked' : 'Bookmark' }}</span>
+                        </button>
                     </div>
                 </div>
             @empty

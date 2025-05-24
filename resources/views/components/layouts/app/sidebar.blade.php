@@ -15,11 +15,11 @@
 
                 <flux:navlist variant="outline">
                     <flux:navlist.group :heading="__('Platform')" class="grid">
-                        <flux:navlist.item icon="home" :href="route('dashboard')"
-                            :current="request()->routeIs('dashboard')" wire:navigate>{{ __('Timeline') }}
+                        <flux:navlist.item  :href="route('dashboard')"
+                            :current="request()->routeIs('dashboard')" wire:navigate> 🏠 {{ __('Timeline') }}
                         </flux:navlist.item>
-                        <flux:navlist.item icon="user" :href="route('profile', Auth::id())"
-                            :current="request()->routeIs('profile')" wire:navigate>{{ __('profile') }}</flux:navlist.item>
+                        <flux:navlist.item  :href="route('profile', Auth::id())"
+                            :current="request()->routeIs('profile')" wire:navigate> 👤 {{ __('profile') }}</flux:navlist.item>
                     </flux:navlist.group>
                 </flux:navlist>
                 <flux:navlist variant="outline">

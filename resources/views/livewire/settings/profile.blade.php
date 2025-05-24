@@ -5,8 +5,12 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\Rule;
 use Livewire\Volt\Component;
+use Livewire\WithFileUploads;
 
 new class extends Component {
+    use WithFileUploads;
+
+    public $avatar;
     public string $name = '';
     public string $email = '';
 
@@ -29,17 +33,16 @@ new class extends Component {
         $validated = $this->validate([
             'name' => ['required', 'string', 'max:255'],
 
-            'email' => [
-                'required',
-                'string',
-                'lowercase',
-                'email',
-                'max:255',
-                Rule::unique(User::class)->ignore($user->id)
-            ],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique(User::class)->ignore($user->id)],
+            'avatar' => ['nullable', 'image'],
         ]);
 
         $user->fill($validated);
+
+        if ($this->avatar) {
+            $path = $this->avatar->store('avatars', 'public');
+            $user->avatar = '/storage/' . $path;
+        }
 
         if ($user->isDirty('email')) {
             $user->email_verified_at = null;
@@ -72,19 +75,37 @@ new class extends Component {
 <section class="w-full">
     @include('partials.settings-heading')
 
-    <x-settings.layout :heading="__('Profile')" :subheading="__('Update your name and email address')">
+    <x-settings.layout :heading="__('Profile')" :subheading="__('Update Nama, Avatar, atau email kamu')">
         <form wire:submit="updateProfileInformation" class="my-6 w-full space-y-6">
-            <flux:input wire:model="name" :label="__('Name')" type="text" required autofocus autocomplete="name" />
+            <div>
+                <label for="avatar" class="block font-medium text-sm text-gray-700 dark:text-gray-300">
+                    {{ __('Avatar (optional)') }}
+                </label>
+                <input type="file" wire:model="avatar" id="avatar"
+                    class="mt-1 block w-full text-sm text-gray-900 dark:text-gray-100 border-gray-300 dark:border-neutral-700 rounded-md shadow-sm" />
+            </div>
+
+            @if (auth()->user()->avatar)
+                <div class="mt-2">
+                    <img src="{{ auth()->user()->avatar_url }}" class="w-16 h-16 rounded-full object-cover"
+                        alt="Avatar">
+                </div>
+            @endif
+
+
+            <flux:input wire:model="name" :label="__('Name')" type="text" required autofocus
+                autocomplete="name" />
 
             <div>
                 <flux:input wire:model="email" :label="__('Email')" type="email" required autocomplete="email" />
 
-                @if (auth()->user() instanceof \Illuminate\Contracts\Auth\MustVerifyEmail &&! auth()->user()->hasVerifiedEmail())
+                @if (auth()->user() instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && !auth()->user()->hasVerifiedEmail())
                     <div>
                         <flux:text class="mt-4">
                             {{ __('Your email address is unverified.') }}
 
-                            <flux:link class="text-sm cursor-pointer" wire:click.prevent="resendVerificationNotification">
+                            <flux:link class="text-sm cursor-pointer"
+                                wire:click.prevent="resendVerificationNotification">
                                 {{ __('Click here to re-send the verification email.') }}
                             </flux:link>
                         </flux:text>
