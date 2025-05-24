@@ -46,4 +46,21 @@ class komenController extends Controller
 
         return response()->json(['message' => 'Tidak diizinkan menghapus komentar ini'], 403);
     }
+
+    public function web_store(Request $request)
+    {
+
+        $validated = $request->validate([
+            'isi' => 'required|string',
+            'kisah_id' => 'required|exists:kisah,id',
+        ]);
+
+        $komen = Komen::create([
+            'isi' => $validated['isi'],
+            'kisah_id' => $validated['kisah_id'],
+            'user_id' => Auth::id(),
+        ]);
+
+        return redirect()->back();
+    }
 }

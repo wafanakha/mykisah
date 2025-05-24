@@ -21,9 +21,9 @@
 
         <hr class="my-6 border-gray-300 dark:border-gray-700" />
 
-        <h2 class="text-xl font-semibold text-gray-800 dark:text-white mb-2">Komentar</h2>
+        <h2 class="text-xl font-semibold text-gray-800 dark:text-white mb-5">Komentar</h2>
         @foreach($kisah->comments as $comment)
-            <div class="flex items-start gap-3 mt-4">
+            <div class="flex items-start gap-3 mb-5">
                 <img src="{{ $comment->user->avatar_url }}" alt="{{ $comment->user->name }}" class="w-8 h-8 rounded-full">
                 <div>
                     <div class="text-sm font-semibold text-gray-900 dark:text-white">{{ $comment->user->name }}</div>
@@ -37,8 +37,8 @@
         <form method="POST" action="{{ route('komen.store') }}">
             @csrf
             <input type="hidden" name="kisah_id" value="{{ $kisah->id }}">
-            <textarea name="isi" rows="3" class="w-full p-2 rounded border dark:bg-neutral-900 dark:border-neutral-700 dark:text-white" placeholder="Tulis komentar..."></textarea>
-            <button type="submit" class="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Kirim</button>
+            <textarea name="isi" rows="3" class="w-full p-2 rounded border dark:bg-neutral-900 dark:border-neutral-700 dark:text-white mb-2" placeholder="Tulis komentar..."></textarea>
+            <flux:button variant="primary" type="submit" class="">{{ __('Save') }}</flux:button>
         </form>
     </div>
 
