@@ -91,4 +91,12 @@ class userController extends Controller
 
         return response()->json($bookmarks);
     }
+
+    public function profile()
+    {
+        $user = Auth::user();
+        $kisahList = $user->kisah()->with('genres')->latest()->get();
+
+        return view('profile', compact('user', 'kisahList'));
+    }
 }

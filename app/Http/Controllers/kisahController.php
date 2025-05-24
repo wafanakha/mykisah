@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
+use App\Models\bookmark;
 use App\Models\Kisah;
 use App\Models\genre;
 use Illuminate\Http\Request;
@@ -149,8 +151,13 @@ class kisahController extends Controller
     // buat website
     public function index()
     {
+        $user =  User::find(Auth::id());
+        $kisahs = Kisah::with('user')->get();
+
         $kisahList = Kisah::with(['user', 'genres'])->latest()->get();
-        return view('dashboard', compact('kisahList'));
+        $bookmarkedIds = $user->bookmarks()->pluck('kisah_id')->toArray();
+
+        return view('dashboard', compact('kisahList', 'bookmarkedIds'));
     }
 
     public function show_kisah($id)
@@ -158,5 +165,33 @@ class kisahController extends Controller
         $kisah = Kisah::with(['user', 'genres', 'comments.user'])->findOrFail($id);
 
         return view('kisah.show', compact('kisah'));
+    }
+
+    public function like($id)
+    {
+        $kisah = Kisah::findOrFail($id);
+        $kisah->increment('like');
+        return response()->json(['message' => 'Liked']);
+    }
+
+    public function dislike($id)
+    {
+        $kisah = Kisah::findOrFail($id);
+        $kisah->increment('dislike');
+        return response()->json(['message' => 'Disliked']);
+    }
+
+    public function toggleBookmark($id)
+    {
+        $kisah = Kisah::findOrFail($id);
+        $user = Auth::user();
+
+        if ($user->bookmarks()->where('kisah_id', $id)->exists()) {
+            $user->bookmarks()->detach($id);
+            return response()->json(['bookmarked' => false]);
+        } else {
+            $user->bookmarks()->attach($id);
+            return response()->json(['bookmarked' => true]);
+        }
     }
 }

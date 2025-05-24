@@ -58,5 +58,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/komen/{id}', [komenController::class, 'destroy']);
 });
 
+// web
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/kisah/{id}/like', [KisahController::class, 'like']);
+    Route::post('/kisah/{id}/dislike', [KisahController::class, 'dislike']);
+    Route::post('/kisah/{id}/bookmark', [KisahController::class, 'toggleBookmark']);
+});
+
 Route::get('/mobile/auth/google/redirect', [GoogleAuthController::class, 'redirect'])->name('auth.google.redirect');
 Route::get('/mobile/auth/google/callback', [GoogleAuthController::class, 'callback'])->name('auth.google.callback');
