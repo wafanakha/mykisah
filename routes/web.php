@@ -36,6 +36,7 @@ Route::middleware(['auth'])->group(function () {
 
 Route::get('/search', [SearchController::class, 'index'])->name('search');
 
+
 Route::get('/dashboard', [kisahController::class, 'index'])->middleware(['auth'])->name('dashboard');
 Route::get('/kisah/{id}', [KisahController::class, 'web_show'])->name('kisah.show');
 Route::post('/komen', [komenController::class, 'web_store'])->name('komen.store');
