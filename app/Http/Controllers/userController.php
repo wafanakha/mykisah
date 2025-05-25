@@ -117,4 +117,12 @@ class userController extends Controller
             'followings' => $user->follows()->paginate(20)
         ]);
     }
+
+    public function web_bookmark()
+    {
+        $user = User::find(Auth::id());
+        $bookmarkedKisahs = $user->bookmarks()->with('genres', 'user')->latest()->get();
+
+        return view('bookmarks.index', compact('bookmarkedKisahs'));
+    }
 }

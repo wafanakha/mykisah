@@ -36,6 +36,7 @@ Route::middleware(['auth'])->group(function () {
 
 Route::get('/search', \App\Livewire\Search::class)->name('search');
 
+Route::get('/bookmarks', [\App\Http\Controllers\userController::class, 'web_bookmark'])->name('bookmarks.index')->middleware('auth');
 
 Route::get('/dashboard', [kisahController::class, 'index'])->middleware(['auth'])->name('dashboard');
 Route::get('/kisah/{id}', [KisahController::class, 'web_show'])->name('kisah.show');

@@ -21,11 +21,18 @@
                             :current="request()->routeIs('dashboard')" wire:navigate> 🏠 {{ __('Timeline') }}
                         </flux:navlist.item>
                         <flux:navlist.item  :href="route('profile', Auth::id())"
-                            :current="request()->routeIs('profile')" wire:navigate> 👤 {{ __('profile') }}</flux:navlist.item>
+                            :current="request()->routeIs('profile')" wire:navigate> 👤 {{ __('profile') }}
+                        </flux:navlist.item>
                         <flux:navlist.item  :href="route('kisah.create')"
-                            :current="request()->routeIs('kisah.create')" wire:navigate> ✍️ {{ __('Buat Kisah') }}</flux:navlist.item>
+                            :current="request()->routeIs('kisah.create')" wire:navigate> ✍️ {{ __('Buat Kisah') }}
+                        </flux:navlist.item>
                         <flux:navlist.item  :href="route('search')"
-                            :current="request()->routeIs('search')" wire:navigate> 🔍 {{ __('Cari') }}</flux:navlist.item>
+                            :current="request()->routeIs('search')" wire:navigate> 🔍 {{ __('Cari') }}
+                        </flux:navlist.item>
+
+                        <flux:navlist.item  :href="route('bookmarks.index')"
+                            :current="request()->routeIs('bookmarks.index')" wire:navigate> 🔖 {{ __('Bookmarks') }}
+                        </flux:navlist.item>
                     </flux:navlist.group>
                 </flux:navlist>
 
@@ -40,7 +47,7 @@
                 </flux:navlist>
             <!-- Desktop User Menu -->
             <flux:dropdown position="bottom" align="start">
-                <flux:profile :name="auth()->user()->name" :initials="auth()->user()->initials()"
+                <flux:profile :name="auth()->user()->name" :avatar="auth()->user()->avatar_url ?? asset('images/default-avatar.png')" 
                     icon-trailing="chevrons-up-down" />
 
                 <flux:menu class="w-[220px]">
@@ -48,10 +55,7 @@
                         <div class="p-0 text-sm font-normal">
                             <div class="flex items-center gap-2 px-1 py-1.5 text-start text-sm">
                                 <span class="relative flex h-8 w-8 shrink-0 overflow-hidden rounded-lg">
-                                    <span
-                                        class="flex h-full w-full items-center justify-center rounded-lg bg-neutral-200 text-black dark:bg-neutral-700 dark:text-white">
-                                        {{ auth()->user()->initials() }}
-                                    </span>
+                                    <img src="{{auth()->user()->avatar_url }}" alt="{{ auth()->user()->name }}" class="w-16 h-16">
                                 </span>
 
                                 <div class="grid flex-1 text-start text-sm leading-tight">

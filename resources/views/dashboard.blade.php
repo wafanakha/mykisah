@@ -37,8 +37,6 @@
                         <!-- Bookmark Button -->
                 </div>
             @endforeach
-
-
         </div>
     </div>
 </x-layouts.app>
