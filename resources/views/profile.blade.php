@@ -57,6 +57,14 @@
                     </div>
 
                     <livewire:kisah.reaction-buttons :kisah="$kisah" />
+                    @can('update', $kisah)
+                        <div class="mt-2">
+                            <a href="{{ route('kisah.edit', $kisah) }}"
+                                class="inline-block text-sm text-blue-600 dark:text-blue-400 hover:underline">
+                                ✏️ Edit Kisah
+                            </a>
+                        </div>
+                    @endcan
                 </div>
             @empty
                 <p class="text-gray-500 dark:text-gray-400">Belum ada kisah yang diunggah.</p>

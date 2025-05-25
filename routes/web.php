@@ -49,5 +49,8 @@ Route::get('/users/{user}/followers', [userController::class, 'followers'])
 Route::get('/users/{user}/following', [userController::class, 'following'])
     ->name('profile.following');
 
+Route::get('/kisah/{kisah}/edit', \App\Livewire\Kisah\EditKisah::class)
+    ->name('kisah.edit')
+    ->middleware('auth');
 
 require __DIR__ . '/auth.php';

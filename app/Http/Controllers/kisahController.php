@@ -8,10 +8,11 @@ use App\Models\Kisah;
 use App\Models\genre;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class kisahController extends Controller
 {
-
+    use AuthorizesRequests;
 
     public function show($id)
     {
@@ -222,6 +223,7 @@ class kisahController extends Controller
             'dislike' => 0,
         ]);
 
+        $this->authorize('update', $kisah);
         foreach ($validated['genres'] as $genre) {
             genre::create([
                 'kisah_id' => $kisah->id,
@@ -229,5 +231,32 @@ class kisahController extends Controller
             ]);
         }
         return redirect()->route('profile', Auth::id())->with('success', 'Kisah berhasil dibuat!');
+    }
+
+    public function web_edit(Kisah $kisah)
+    {
+        $genres = Genre::all();
+        $selectedGenres = $kisah->genres->pluck('id')->toArray();
+
+        return view('kisah.edit', compact('kisah', 'genres', 'selectedGenres'));
+    }
+
+    public function web_update(Request $request, Kisah $kisah)
+    {
+        $this->authorize('update', $kisah);
+        $validated = $request->validate([
+            'judul' => 'required|string|max:255',
+            'sinopsis' => 'required|string',
+            'genres' => 'array|exists:genres,id',
+        ]);
+
+        $kisah->update([
+            'judul' => $validated['judul'],
+            'sinopsis' => $validated['sinopsis'],
+        ]);
+
+        $kisah->genres()->sync($validated['genres']);
+
+        return redirect()->route('kisah.show', $kisah)->with('success', 'Kisah berhasil diperbarui.');
     }
 }
