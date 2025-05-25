@@ -27,10 +27,17 @@ Route::middleware(['auth'])->group(function () {
 Route::get('/auth/google/redirect', [GoogleAuthController::class, 'redirect'])->name('auth.google.redirect');
 Route::get('/api/auth/google/callback', [GoogleAuthController::class, 'callback'])->name('auth.google.callback');
 
+Route::middleware(['auth'])->group(function () {
+    Route::get('kisah/create', [KisahController::class, 'web_create'])->name('kisah.create');
+    Route::post('kisah', [KisahController::class, 'web_store'])->name('kisah.store');
+});
+
 Route::get('/dashboard', [kisahController::class, 'index'])->middleware(['auth'])->name('dashboard');
 Route::get('/kisah/{id}', [KisahController::class, 'web_show'])->name('kisah.show');
 Route::post('/komen', [komenController::class, 'web_store'])->name('komen.store');
 
 Route::get('/profile/{id}', [userController::class, 'profile'])->middleware('auth')->name('profile');
+
+
 
 require __DIR__ . '/auth.php';

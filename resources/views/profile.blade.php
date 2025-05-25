@@ -1,4 +1,11 @@
 <x-layouts.app :title="__('Profile')">
+
+    @if(session('success'))
+        <div class="mb-4 p-4 bg-green-100 border border-green-300 text-green-700 rounded">
+            {{ session('success') }}
+        </div>
+    @endif
+
     <div class="max-w-4xl mx-auto py-8 px-4">
         <div class="flex items-center gap-4 mb-6">
             <img src="{{ $user->avatar_url }}" alt="{{ $user->name }}" class="w-16 h-16 rounded-full">
@@ -57,3 +64,11 @@
         </div>
     </div>
 </x-layouts.app>
+
+
+<script>
+    setTimeout(() => {
+        const alert = document.querySelector('[role="alert"]');
+        if (alert) alert.remove();
+    }, 3000);
+</script>

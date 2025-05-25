@@ -1,5 +1,4 @@
 <x-layouts.app :title="__('Dashboard')" value="light">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
     <div class="flex h-full w-full flex-col gap-4 rounded-xl">
         <div class="flex justify-between items-center p-4 border-b dark:border-neutral-700">
             <h2 class="text-2xl font-bold text-gray-800 dark:text-white">Home</h2>
@@ -11,7 +10,7 @@
                 <div class="kisah-card border p-4 rounded-lg mb-4 bg-white dark:bg-neutral-900 shadow"
                     data-url="{{ route('kisah.show', $kisah->id) }}">
                     <div class="flex items-center gap-3 mb-4 cursor-pointer"
-                        onclick="window.location='{{ route('profile', $kisah->user->id) }}'" class="cursor-pointer">
+                        onclick="window.location='{{ route('profile', $kisah->user->id) }}'">
                         <img src="{{ $kisah->user->avatar_url }}" alt="{{ $kisah->user->name }}"
                             class="w-8 h-8 rounded-full">
                         <span class="font-medium text-gray-800 dark:text-gray-200">{{ $kisah->user->name }}</span>
@@ -62,8 +61,8 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
+        const token = {{ Js::from($token) }};
+        console.log(token);
         document.querySelectorAll('.btn-like').forEach(button => {
             button.addEventListener('click', async function(e) {
                 e.preventDefault();
@@ -72,7 +71,7 @@
                 const res = await fetch(`/api/kisah/${id}/like`, {
                     method: 'POST',
                     headers: {
-                        'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                        'Authorization': 'Bearer ' + token,
                         'Content-Type': 'application/json',
                         'Accept': 'application/json'
                     },
@@ -91,7 +90,7 @@
                 const res = await fetch(`/api/kisah/${id}/dislike`, {
                     method: 'POST',
                     headers: {
-                        'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                        'Authorization': 'Bearer ' + token,
                         'Content-Type': 'application/json',
                         'Accept': 'application/json'
                     },
@@ -111,7 +110,7 @@
                 const res = await fetch(`/api/kisah/${id}/bookmark`, {
                     method: 'POST',
                     headers: {
-                        'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                        'Authorization': 'Bearer ' + token,
                         'Content-Type': 'application/json',
                         'Accept': 'application/json'
                     },

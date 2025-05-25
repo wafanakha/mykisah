@@ -20,6 +20,8 @@
                         </flux:navlist.item>
                         <flux:navlist.item  :href="route('profile', Auth::id())"
                             :current="request()->routeIs('profile')" wire:navigate> 👤 {{ __('profile') }}</flux:navlist.item>
+                        <flux:navlist.item  :href="route('kisah.create')"
+                            :current="request()->routeIs('kisah.create')" wire:navigate> ✍️ {{ __('Buat Kisah') }}</flux:navlist.item>
                     </flux:navlist.group>
                 </flux:navlist>
                 <flux:navlist variant="outline">

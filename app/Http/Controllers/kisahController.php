@@ -153,11 +153,12 @@ class kisahController extends Controller
     {
         $user =  User::find(Auth::id());
         $kisahs = Kisah::with('user')->get();
+        $token = session()->get('accessToken');
 
         $kisahList = Kisah::with(['user', 'genres'])->latest()->get();
         $bookmarkedIds = $user->bookmarks()->pluck('kisah_id')->toArray();
 
-        return view('dashboard', compact('kisahList', 'bookmarkedIds'));
+        return view('dashboard', compact('kisahList', 'bookmarkedIds', 'token'));
     }
 
     public function web_show($id)
@@ -193,5 +194,40 @@ class kisahController extends Controller
             $user->bookmarks()->attach($id);
             return response()->json(['bookmarked' => true]);
         }
+    }
+
+
+    public function web_create()
+    {
+        $genres = Genre::all();
+        return view('kisah.create', compact('genres'));
+    }
+
+    public function web_store(Request $request)
+    {
+        $validated = $request->validate([
+            'judul' => 'required|string|max:255',
+            'sinopsis' => 'required|string|max:255',
+            'isi' => 'required|string',
+            'genres' => 'required|array',
+            'genres.*' => 'in:Romance,Fantasy,Horror,Misteri,Laga,Sejarah,Fiksi Ilmiah,Petualangan'
+        ]);
+
+        $kisah = Kisah::create([
+            'judul' => $validated['judul'],
+            'sinopsis' => $validated['sinopsis'],
+            'isi' => $validated['isi'],
+            'user_id' => Auth::id(),
+            'like' => 0,
+            'dislike' => 0,
+        ]);
+
+        foreach ($validated['genres'] as $genre) {
+            genre::create([
+                'kisah_id' => $kisah->id,
+                'genre' => $genre
+            ]);
+        }
+        return redirect()->route('profile', Auth::id())->with('success', 'Kisah berhasil dibuat!');
     }
 }

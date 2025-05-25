@@ -4,7 +4,7 @@
         <div class="mb-4">
             <h1 class="text-2xl font-bold text-gray-900 dark:text-white">{{ $kisah->judul }}</h1>
             <p class="text-sm text-gray-600 dark:text-gray-400">
-                Ditulis oleh <strong>{{ $kisah->user->name }}</strong> pada {{ $kisah->created_at->format('M d, Y') }}
+                Ditulis oleh <strong onclick="window.location='{{ route('profile', $kisah->user->id) }}'"  class="cursor-pointer">{{ $kisah->user->name }}</strong> pada {{ $kisah->created_at->format('M d, Y') }}
             </p>
             <div class="mt-2 text-sm text-gray-700 dark:text-gray-300">
                 @foreach ($kisah->genres as $genre)
