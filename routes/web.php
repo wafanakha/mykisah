@@ -4,6 +4,8 @@ use App\Http\Controllers\GoogleAuthController;
 use App\Http\Controllers\kisahController;
 use App\Http\Controllers\komenController;
 use App\Http\Controllers\userController;
+use App\Http\Controllers\SearchController;
+use App\Livewire\Search;
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 
@@ -32,11 +34,14 @@ Route::middleware(['auth'])->group(function () {
     Route::post('kisah', [KisahController::class, 'web_store'])->name('kisah.store');
 });
 
+Route::get('/search', [SearchController::class, 'index'])->name('search');
+
 Route::get('/dashboard', [kisahController::class, 'index'])->middleware(['auth'])->name('dashboard');
 Route::get('/kisah/{id}', [KisahController::class, 'web_show'])->name('kisah.show');
 Route::post('/komen', [komenController::class, 'web_store'])->name('komen.store');
 
 Route::get('/profile/{id}', [userController::class, 'profile'])->middleware('auth')->name('profile');
+
 
 
 

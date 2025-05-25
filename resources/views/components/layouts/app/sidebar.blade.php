@@ -3,6 +3,8 @@
 
     <head>
         @include('partials.head')
+        @livewireStyles
+        @livewireScripts
     </head>
 
     <body class="min-h-screen bg-white dark:bg-zinc-800">
@@ -22,6 +24,8 @@
                             :current="request()->routeIs('profile')" wire:navigate> 👤 {{ __('profile') }}</flux:navlist.item>
                         <flux:navlist.item  :href="route('kisah.create')"
                             :current="request()->routeIs('kisah.create')" wire:navigate> ✍️ {{ __('Buat Kisah') }}</flux:navlist.item>
+                        <flux:navlist.item  :href="route('search')"
+                            :current="request()->routeIs('search')" wire:navigate> 🔍 {{ __('Cari') }}</flux:navlist.item>
                     </flux:navlist.group>
                 </flux:navlist>
                 <flux:navlist variant="outline">
