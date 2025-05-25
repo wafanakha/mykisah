@@ -12,7 +12,25 @@
             <div>
                 <h1 class="text-2xl font-bold text-gray-800 dark:text-white">{{ $user->name }}</h1>
                 <p class="text-gray-500 dark:text-gray-400">User ID: {{ $user->id }}</p>
+
+                <div class="flex gap-4 mt-2">
+                <a href="{{ route('profile.followers', $user) }}" class="hover:underline">
+                    <span class="font-semibold">{{ $user->followers_count }}</span>
+                    <span class="text-gray-500 dark:text-gray-400">Followers</span>
+                </a>
+                <a href="{{ route('profile.following', $user) }}" class="hover:underline">
+                    <span class="font-semibold">{{ $user->followings_count }}</span>
+                    <span class="text-gray-500 dark:text-gray-400">Following</span>
+                </a>
             </div>
+            </div>
+            @auth
+                @if(Auth::id() !== $user->id)
+                    <div class="ml-auto">
+                        <livewire:follow-button :user="$user" />
+                    </div>
+                @endif
+            @endauth
         </div>
 
         <h2 class="text-xl font-semibold text-gray-700 dark:text-gray-300 mb-4">Kisah yang Diunggah</h2>
@@ -38,25 +56,7 @@
                         <p class="text-gray-600 dark:text-gray-300">{{ $kisah->sinopsis }}</p>
                     </div>
 
-                    <div class="mt-0.5 flex gap-4 text-sm text-gray-600 dark:text-gray-300">
-                        <!-- Like Button -->
-                        <button class="btn-like border p-2 rounded-lg mt-4" data-kisah-id="{{ $kisah->id }}">
-                            👍 <span class="like-count">{{ $kisah->like }}</span>
-                        </button>
-
-                        <!-- Dislike Button -->
-                        <button class="btn-dislike border p-2 rounded-lg mt-4" data-kisah-id="{{ $kisah->id }}">
-                            👎 <span class="dislike-count">{{ $kisah->dislike }}</span>
-                        </button>
-
-                        <!-- Bookmark Button -->
-                        <button
-                            class="btn-bookmark border p-2 rounded-lg mt-4  {{ $kisah->bookmarkedBy->contains(auth()->id()) ? 'text-yellow-500' : '' }}"
-                            data-kisah-id="{{ $kisah->id }}">
-                            📌 <span
-                                class="bookmark-label">{{ $kisah->bookmarkedBy->contains(auth()->id()) ? 'Bookmarked' : 'Bookmark' }}</span>
-                        </button>
-                    </div>
+                    <livewire:kisah.reaction-buttons :kisah="$kisah" />
                 </div>
             @empty
                 <p class="text-gray-500 dark:text-gray-400">Belum ada kisah yang diunggah.</p>

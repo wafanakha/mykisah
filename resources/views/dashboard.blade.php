@@ -32,17 +32,9 @@
                         <p class="text-gray-600 dark:text-gray-300">{{ $kisah->sinopsis }}</p>
                     </div>
 
-                    <div class="mt-0.5 flex gap-4 text-sm text-gray-600 dark:text-gray-300">
                         <!-- Like Button -->
                         <livewire:kisah.reaction-buttons :kisah="$kisah" />
                         <!-- Bookmark Button -->
-                        <button
-                            class="btn-bookmark border p-2 rounded-lg mt-4  {{ $kisah->bookmarkedBy->contains(auth()->id()) ? 'text-yellow-500' : '' }}"
-                            data-kisah-id="{{ $kisah->id }}">
-                            📌 <span
-                                class="bookmark-label">{{ $kisah->bookmarkedBy->contains(auth()->id()) ? 'Bookmarked' : 'Bookmark' }}</span>
-                        </button>
-                    </div>
                 </div>
             @endforeach
 

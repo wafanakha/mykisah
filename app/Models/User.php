@@ -80,10 +80,14 @@ class User extends Authenticatable
         return $this->belongsToMany(User::class, 'follow', 'following_id', 'user_id');
     }
 
+
+
     public function comments()
     {
         return $this->hasMany(komen::class);
     }
+
+    // Untuk Web
 
     public function getAvatarUrlAttribute()
     {
@@ -99,5 +103,34 @@ class User extends Authenticatable
         return $this->belongsToMany(Kisah::class, 'kisah_user_reactions')
             ->withPivot('value')
             ->withTimestamps();
+    }
+
+    protected $appends = ['followers_count', 'followings_count'];
+
+    public function getFollowersCountAttribute()
+    {
+        return $this->followers()->count();
+    }
+
+    public function getFollowingsCountAttribute()
+    {
+        return $this->follows()->count();
+    }
+
+    public function follow(User $user)
+    {
+        if (!$this->isFollowing($user)) {
+            $this->follows()->attach($user);
+        }
+    }
+
+    public function unfollow(User $user)
+    {
+        $this->follows()->detach($user);
+    }
+
+    public function isFollowing(User $user)
+    {
+        return $this->follows()->where('following_id', $user->id)->exists();
     }
 }

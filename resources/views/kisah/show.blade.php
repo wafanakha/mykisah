@@ -19,6 +19,8 @@
             {!! nl2br(e($kisah->isi)) !!}
         </div>
 
+        <livewire:kisah.reaction-buttons :kisah="$kisah" />
+
         <hr class="my-6 border-gray-300 dark:border-gray-700" />
 
         <h2 class="text-xl font-semibold text-gray-800 dark:text-white mb-5">Komentar</h2>

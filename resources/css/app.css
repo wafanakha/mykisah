@@ -62,12 +62,24 @@ select:focus[data-flux-control] {
     @apply outline-hidden ring-2 ring-accent ring-offset-2 ring-offset-accent-foreground;
 }
 
-/* \[:where(&)\]:size-4 {
-    @apply size-4;
-} */
-
 .bookmarked {
     background-color: #f0c14b;
     color: black;
     font-weight: bold;
+}
+
+.follow-btn {
+    transition: all 0.2s ease;
+}
+
+.follow-btn:hover {
+    transform: translateY(-1px);
+}
+
+.follow-count {
+    transition: all 0.3s ease;
+}
+
+.follow-count:hover {
+    color: var(--primary-color);
 }

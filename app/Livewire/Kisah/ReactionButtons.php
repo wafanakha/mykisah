@@ -3,59 +3,84 @@
 namespace App\Livewire\Kisah;
 
 use App\Models\Kisah;
-use App\Models\User;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 
 class ReactionButtons extends Component
 {
     public Kisah $kisah;
-
     public int $likeCount = 0;
     public int $dislikeCount = 0;
-    public ?int $userReaction = null; // 1 = like, -1 = dislike, null = no reaction
+    public bool $bookmarked = false;
+    public ?int $userReaction = null;
 
     public function mount(Kisah $kisah)
     {
         $this->kisah = $kisah;
-        $this->updateReactionData();
+        $this->refreshCounts();
+        $this->bookmarked = Auth::check()
+            ? $this->kisah->bookmarkedBy()->where('user_id', Auth::id())->exists()
+            : false;
     }
 
     public function like()
     {
-        $this->react(1);
+        $this->toggleReaction(1);
     }
 
     public function dislike()
     {
-        $this->react(-1);
+        $this->toggleReaction(-1);
     }
 
-    protected function react(int $value)
+    protected function toggleReaction(int $value)
     {
-        $user = User::find(Auth::id());
+        if (!Auth::check()) return;
 
-        if (!$user) return;
+        $currentReaction = $this->kisah->reactions()
+            ->where('user_id', Auth::id())
+            ->first();
 
-        // Hapus jika user mengklik reaksi yang sama
-        if ($this->userReaction === $value) {
-            $user->reactedKisah()->detach($this->kisah->id);
+        if ($currentReaction && $currentReaction->pivot->value === $value) {
+            // Remove reaction if clicking the same button
+            $this->kisah->reactions()->detach(Auth::id());
         } else {
-            $user->reactedKisah()->syncWithoutDetaching([
-                $this->kisah->id => ['value' => $value]
+            // Add/update reaction
+            $this->kisah->reactions()->syncWithoutDetaching([
+                Auth::id() => ['value' => $value]
             ]);
         }
 
-        $this->updateReactionData();
+        $this->refreshCounts();
     }
 
-    protected function updateReactionData()
+    public function toggleBookmark()
     {
-        $this->likeCount = $this->kisah->reactions()->wherePivot('value', 1)->count();
-        $this->dislikeCount = $this->kisah->reactions()->wherePivot('value', -1)->count();
+        if (!Auth::check()) return;
+
+        $this->bookmarked = !$this->bookmarked;
+
+        if ($this->bookmarked) {
+            $this->kisah->bookmarkedBy()->attach(Auth::id());
+        } else {
+            $this->kisah->bookmarkedBy()->detach(Auth::id());
+        }
+    }
+
+    protected function refreshCounts()
+    {
+        $this->likeCount = $this->kisah->reactions()
+            ->where('value', 1)
+            ->count();
+
+        $this->dislikeCount = $this->kisah->reactions()
+            ->where('value', -1)
+            ->count();
 
         $this->userReaction = Auth::check()
-            ? $this->kisah->reactions()->where('user_id', Auth::id())->value('value')
+            ? $this->kisah->reactions()
+            ->where('user_id', Auth::id())
+            ->first()?->pivot->value
             : null;
     }
 

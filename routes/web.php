@@ -34,7 +34,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('kisah', [KisahController::class, 'web_store'])->name('kisah.store');
 });
 
-Route::get('/search', [SearchController::class, 'index'])->name('search');
+Route::get('/search', \App\Livewire\Search::class)->name('search');
 
 
 Route::get('/dashboard', [kisahController::class, 'index'])->middleware(['auth'])->name('dashboard');
@@ -43,7 +43,11 @@ Route::post('/komen', [komenController::class, 'web_store'])->name('komen.store'
 
 Route::get('/profile/{id}', [userController::class, 'profile'])->middleware('auth')->name('profile');
 
+Route::get('/users/{user}/followers', [userController::class, 'followers'])
+    ->name('profile.followers');
 
+Route::get('/users/{user}/following', [userController::class, 'following'])
+    ->name('profile.following');
 
 
 require __DIR__ . '/auth.php';

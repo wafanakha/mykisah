@@ -92,11 +92,29 @@ class userController extends Controller
         return response()->json($bookmarks);
     }
 
+    //   For Web
+
     public function profile($id)
     {
         $user = User::find($id);
         $kisahList = $user->kisah()->with('genres')->latest()->get();
 
         return view('profile', compact('user', 'kisahList'));
+    }
+
+    public function followers(User $user)
+    {
+        return view('profile.followers', [
+            'user' => $user,
+            'followers' => $user->followers()->paginate(20)
+        ]);
+    }
+
+    public function following(User $user)
+    {
+        return view('profile.following', [
+            'user' => $user,
+            'followings' => $user->follows()->paginate(20)
+        ]);
     }
 }
