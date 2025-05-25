@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             KomenSeeder::class,
             BookmarkSeeder::class,
             FollowSeeder::class,
+            ReactionSeeder::class
         ]);
     }
 }

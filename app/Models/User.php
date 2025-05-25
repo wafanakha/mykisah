@@ -93,4 +93,11 @@ class User extends Authenticatable
 
         return 'https://ui-avatars.com/api/?name=' . urlencode(ucwords($this->name)) . '&color=7F9CF5&background=EBF4FF';
     }
+
+    public function reactedKisah()
+    {
+        return $this->belongsToMany(Kisah::class, 'kisah_user_reactions')
+            ->withPivot('value')
+            ->withTimestamps();
+    }
 }

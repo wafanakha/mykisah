@@ -53,6 +53,7 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::dropIfExists('kisah_user_reactions');
         Schema::dropIfExists('follow');
         Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');

@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Kisah;
+use App\Models\Reaction;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 

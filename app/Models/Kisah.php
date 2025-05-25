@@ -38,4 +38,11 @@ class Kisah extends Model
     {
         return $this->hasMany(komen::class);
     }
+
+    public function reactions()
+    {
+        return $this->belongsToMany(User::class, 'kisah_user_reactions')
+            ->withPivot('value')
+            ->withTimestamps();
+    }
 }

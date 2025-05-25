@@ -34,15 +34,7 @@
 
                     <div class="mt-0.5 flex gap-4 text-sm text-gray-600 dark:text-gray-300">
                         <!-- Like Button -->
-                        <button class="btn-like border p-2 rounded-lg mt-4" data-kisah-id="{{ $kisah->id }}">
-                            👍 <span class="like-count">{{ $kisah->like }}</span>
-                        </button>
-
-                        <!-- Dislike Button -->
-                        <button class="btn-dislike border p-2 rounded-lg mt-4" data-kisah-id="{{ $kisah->id }}">
-                            👎 <span class="dislike-count">{{ $kisah->dislike }}</span>
-                        </button>
-
+                        <livewire:kisah.reaction-buttons :kisah="$kisah" />
                         <!-- Bookmark Button -->
                         <button
                             class="btn-bookmark border p-2 rounded-lg mt-4  {{ $kisah->bookmarkedBy->contains(auth()->id()) ? 'text-yellow-500' : '' }}"
