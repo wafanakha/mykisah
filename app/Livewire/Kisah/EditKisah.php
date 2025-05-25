@@ -17,8 +17,7 @@ class EditKisah extends Component
     public $judul;
     public $sinopsis;
     public $isi;
-    public $cover;
-    public $tempCover;
+
     public $selectedGenres = [];
     public $allGenres;
 
@@ -53,11 +52,6 @@ class EditKisah extends Component
         ];
     }
 
-    public function updatedCover()
-    {
-        $this->validateOnly('cover');
-        $this->tempCover = $this->cover->temporaryUrl();
-    }
 
     public function save()
     {
@@ -70,17 +64,6 @@ class EditKisah extends Component
             'isi' => $this->isi,
         ]);
 
-        // Handle cover upload
-        if ($this->cover) {
-            $path = $this->cover->store('covers', 'public');
-
-            // Delete old cover if exists
-            if ($this->kisah->cover) {
-                Storage::disk('public')->delete($this->kisah->cover);
-            }
-
-            $this->kisah->update(['cover' => $path]);
-        }
 
         // Sync genres
         $this->kisah->genres()->delete();

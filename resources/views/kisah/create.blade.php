@@ -31,18 +31,26 @@
             </div>
 
             <div class="mb-4">
-                <label for="genres" class="block text-gray-700 dark:text-gray-300">Genre</label>
-                <select id="genres" name="genres[]" multiple class="w-full p-2 border rounded dark:bg-neutral-800 dark:text-white">
-                        <option value='Romance'>Romance</option>
-                        <option value='Fantasy'>Fantasy</option> 'Romance', 'Fantasy', 'Horror', 'Misteri', 'Laga', 'Sejarah', 'Fiksi Ilmiah', 'Petualangan'
-                        <option value='Horror'>Horror</option>
-                        <option value='Misteri'>Misteri</option>
-                        <option value='Laga'>Laga</option>
-                        <option value='Sejarah'>Sejarah</option>
-                        <option value='Fiksi Ilmiah'>Fiksi Ilmiah</option>
-                        <option value='Petualangan'>Petualangan</option>
-                </select>
-                <small class="text-gray-500">Tekan Ctrl (Windows) / Command (Mac) untuk memilih lebih dari satu</small>
+                <label class="block text-gray-700 dark:text-gray-300 mb-2">Genre</label>
+                <div class="grid grid-cols-2 gap-2">
+                    @php
+                        $allGenres = ['Romance', 'Fantasy', 'Horror', 'Misteri', 'Laga', 'Sejarah', 'Fiksi Ilmiah', 'Petualangan'];
+                    @endphp
+
+                    @foreach ($allGenres as $genre)
+                        <label class="flex items-center space-x-2">
+                            <input
+                                type="checkbox"
+                                name="genres[]"
+                                value="{{ $genre }}"
+                                class="form-checkbox text-blue-600"
+                                {{ isset($selectedGenres) && in_array($genre, $selectedGenres) ? 'checked' : '' }}
+                            >
+                            <span class="text-gray-700 dark:text-gray-300">{{ $genre }}</span>
+                        </label>
+                    @endforeach
+                </div>
+                <small class="text-gray-500">Pilih satu atau lebih genre.</small>
             </div>
 
             <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">

@@ -10,48 +10,26 @@
     <form wire:submit.prevent="save" class="space-y-6">
         <!-- Judul -->
         <div>
-            <label for="judul" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Judul</label>
+            <label for="judul" class="block text-gray-700 dark:text-gray-300">Judul</label>
             <input 
                 type="text" 
                 id="judul" 
                 wire:model="judul" 
-                class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:text-white">
+                class="w-full p-2 border rounded dark:bg-neutral-800 dark:text-white" required>
             @error('judul') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
         </div>
 
         <!-- Sinopsis -->
         <div>
-            <label for="sinopsis" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Sinopsis</label>
+            <label for="sinopsis" class="block text-gray-700 dark:text-gray-300">Sinopsis</label>
             <textarea 
                 id="sinopsis" 
                 wire:model="sinopsis" 
                 rows="3" 
-                class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:text-white"></textarea>
+               class="w-full p-2 border rounded dark:bg-neutral-800 dark:text-white" required></textarea>
             @error('sinopsis') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
         </div>
 
-        <!-- Cover -->
-        <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Cover</label>
-            <div class="mt-1 flex items-center">
-                @if($tempCover || $kisah->cover_url)
-                    <img src="{{ $tempCover ?? $kisah->cover_url }}" alt="Preview Cover" class="h-32 w-32 object-cover rounded-md">
-                @endif
-                <div class="ml-4">
-                    <input 
-                        type="file" 
-                        wire:model="cover" 
-                        accept="image/*"
-                        class="text-sm text-gray-500 dark:text-gray-400
-                            file:mr-4 file:py-2 file:px-4
-                            file:rounded-md file:border-0
-                            file:text-sm file:font-semibold
-                            file:bg-blue-50 file:text-blue-700 dark:file:bg-blue-900 dark:file:text-blue-100
-                            hover:file:bg-blue-100 dark:hover:file:bg-blue-800">
-                    @error('cover') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
-                </div>
-            </div>
-        </div>
 
         <!-- Genre -->
         <div>
@@ -73,12 +51,12 @@
 
         <!-- Isi -->
         <div>
-            <label for="isi" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Isi Kisah</label>
+            <label for="isi" class="block text-gray-700 dark:text-gray-300">Isi Kisah</label>
             <textarea 
                 id="isi" 
                 wire:model="isi" 
                 rows="15" 
-                class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:text-white"></textarea>
+                class="w-full p-2 border rounded dark:bg-neutral-800 dark:text-white" required></textarea>
             @error('isi') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
         </div>
 

@@ -14,13 +14,7 @@
                 @endforeach
             </div>
         </div>
-        @can('update', $kisah)
-            <a 
-                href="{{ route('kisah.edit', $kisah) }}" 
-                class="px-3 py-1 text-sm bg-yellow-500 text-white rounded hover:bg-yellow-600">
-                Edit Kisah
-            </a>
-        @endcan
+
 
         <div class="prose dark:prose-invert max-w-none">
             {!! nl2br(e($kisah->isi)) !!}
