@@ -16,37 +16,110 @@ class kisahController extends Controller
 
     public function show($id)
     {
-        return Kisah::with('user', 'genres', 'comments')->findOrFail($id);
+        $kisah = Kisah::with([
+            'user',
+            'genres',
+            'comments',
+            'reactions',
+            'bookmarkedBy'
+        ])->findOrFail($id);
+
+        // Add reaction counts and current user's status
+        $kisah->like_count = $kisah->reactions()->wherePivot('value', 1)->count();
+        $kisah->dislike_count = $kisah->reactions()->wherePivot('value', -1)->count();
+        $kisah->bookmark_count = $kisah->bookmarkedBy()->count();
+
+        // Get current user's reaction and bookmark status
+        $userReaction = $kisah->reactions()
+            ->where('user_id', Auth::id())
+            ->first();
+
+        $kisah->current_user_reaction = $userReaction ? $userReaction->pivot->value : null;
+        $kisah->is_bookmarked = $kisah->bookmarkedBy()
+            ->where('user_id', Auth::id())
+            ->exists();
+
+        return $kisah;
     }
 
     public function showAll()
     {
-        return Kisah::with('user', 'genres', 'comments')->get();
+        return Kisah::with([
+            'user',
+            'genres',
+            'comments',
+            'reactions',
+            'bookmarkedBy'
+        ])->get()
+            ->map(function ($kisah) {
+                $kisah->like_count = $kisah->reactions()->wherePivot('value', 1)->count();
+                $kisah->dislike_count = $kisah->reactions()->wherePivot('value', -1)->count();
+                $kisah->bookmark_count = $kisah->bookmarkedBy()->count();
+
+                $userReaction = $kisah->reactions()
+                    ->where('user_id', Auth::id())
+                    ->first();
+
+                $kisah->current_user_reaction = $userReaction ? $userReaction->pivot->value : null;
+                $kisah->is_bookmarked = $kisah->bookmarkedBy()
+                    ->where('user_id', Auth::id())
+                    ->exists();
+
+                return $kisah;
+            });
     }
 
     public function getKisahSearch()
     {
-        $kisahList = Kisah::select('kisah.id', 'kisah.judul', 'kisah.user_id')
+        return Kisah::select('kisah.id', 'kisah.judul', 'kisah.user_id')
+            ->with(['user', 'genres', 'reactions', 'bookmarkedBy'])
             ->get()
             ->map(function ($kisah) {
                 return [
                     'id' => $kisah->id,
                     'judul' => $kisah->judul,
                     'user_name' => $kisah->user->name,
-                    'genres' => $kisah->genres->pluck('genre')
+                    'genres' => $kisah->genres->pluck('genre'),
+                    'like_count' => $kisah->reactions()->wherePivot('value', 1)->count(),
+                    'dislike_count' => $kisah->reactions()->wherePivot('value', -1)->count(),
+                    'bookmark_count' => $kisah->bookmarkedBy()->count(),
+                    'current_user_reaction' => $kisah->reactions()
+                        ->where('user_id', Auth::id())
+                        ->first()->pivot->value ?? null,
+                    'is_bookmarked' => $kisah->bookmarkedBy()
+                        ->where('user_id', Auth::id())
+                        ->exists()
                 ];
             });
-
-        return response()->json($kisahList);
     }
 
     public function getUserKisah($id)
     {
-        $kisahList = Kisah::with(['user', 'genres', 'comments.user'])
+        return Kisah::with([
+            'user',
+            'genres',
+            'comments.user',
+            'reactions',
+            'bookmarkedBy'
+        ])
             ->where('user_id', $id)
-            ->get();
+            ->get()
+            ->map(function ($kisah) {
+                $kisah->like_count = $kisah->reactions()->wherePivot('value', 1)->count();
+                $kisah->dislike_count = $kisah->reactions()->wherePivot('value', -1)->count();
+                $kisah->bookmark_count = $kisah->bookmarkedBy()->count();
 
-        return response()->json($kisahList);
+                $userReaction = $kisah->reactions()
+                    ->where('user_id', Auth::id())
+                    ->first();
+
+                $kisah->current_user_reaction = $userReaction ? $userReaction->pivot->value : null;
+                $kisah->is_bookmarked = $kisah->bookmarkedBy()
+                    ->where('user_id', Auth::id())
+                    ->exists();
+
+                return $kisah;
+            });
     }
 
     public function getUserKisahSorted($id, $order = 'asc')
@@ -55,12 +128,32 @@ class kisahController extends Controller
             return response()->json(['error' => 'Invalid sort direction'], 400);
         }
 
-        $kisahList = Kisah::with(['genres', 'comments', 'user'])
+        return Kisah::with([
+            'genres',
+            'comments',
+            'user',
+            'reactions',
+            'bookmarkedBy'
+        ])
             ->where('user_id', $id)
             ->orderBy('created_at', $order)
-            ->get();
+            ->get()
+            ->map(function ($kisah) {
+                $kisah->like_count = $kisah->reactions()->wherePivot('value', 1)->count();
+                $kisah->dislike_count = $kisah->reactions()->wherePivot('value', -1)->count();
+                $kisah->bookmark_count = $kisah->bookmarkedBy()->count();
 
-        return response()->json($kisahList);
+                $userReaction = $kisah->reactions()
+                    ->where('user_id', Auth::id())
+                    ->first();
+
+                $kisah->current_user_reaction = $userReaction ? $userReaction->pivot->value : null;
+                $kisah->is_bookmarked = $kisah->bookmarkedBy()
+                    ->where('user_id', Auth::id())
+                    ->exists();
+
+                return $kisah;
+            });
     }
 
     public function store(Request $request)

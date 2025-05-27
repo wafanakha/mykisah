@@ -40,6 +40,7 @@ Route::get('/bookmarks', [\App\Http\Controllers\userController::class, 'web_book
 
 Route::get('/dashboard', [kisahController::class, 'index'])->middleware(['auth'])->name('dashboard');
 Route::get('/kisah/{id}', [KisahController::class, 'web_show'])->name('kisah.show');
+
 Route::post('/komen', [komenController::class, 'web_store'])->name('komen.store');
 
 Route::get('/profile/{id}', [userController::class, 'profile'])->middleware('auth')->name('profile');

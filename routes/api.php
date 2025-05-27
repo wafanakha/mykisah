@@ -5,6 +5,7 @@ use App\Http\Controllers\kisahController;
 use App\Http\Controllers\userController;
 use App\Http\Controllers\followController;
 use App\Http\Controllers\komenController;
+use App\Http\Controllers\Api\ReactionController;
 use App\Http\Controllers\GoogleAuthController;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -58,13 +59,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/komen/{id}', [komenController::class, 'destroy']);
 });
 
-// web
-
 Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/kisah/{id}/like', [KisahController::class, 'like']);
-    Route::post('/kisah/{id}/dislike', [KisahController::class, 'dislike']);
-    Route::post('/kisah/{id}/bookmark', [KisahController::class, 'toggleBookmark']);
+    Route::post('/kisah/{kisah}/reaction', [ReactionController::class, 'store']);
+    Route::get('/kisah/{kisah}/reaction', [ReactionController::class, 'show']);
+    Route::delete('/kisah/{kisah}/reaction', [ReactionController::class, 'destroy']);
+    Route::get('/users/{user}/reactions', [ReactionController::class, 'userReactions']);
 });
+
 
 Route::get('/mobile/auth/google/redirect', [GoogleAuthController::class, 'redirect'])->name('auth.google.redirect');
 Route::get('/mobile/auth/google/callback', [GoogleAuthController::class, 'callback'])->name('auth.google.callback');

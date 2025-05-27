@@ -12,6 +12,8 @@ class Reaction extends Model
 
     protected $table = 'kisah_user_reactions';
 
+    protected $fillable = ['user_id', 'kisah_id', 'value'];
+
     // Relationship to Kisah
     public function kisah()
     {
@@ -22,5 +24,17 @@ class Reaction extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    // Scope for likes
+    public function scopeLikes($query)
+    {
+        return $query->where('value', 1);
+    }
+
+    // Scope for dislikes
+    public function scopeDislikes($query)
+    {
+        return $query->where('value', -1);
     }
 }

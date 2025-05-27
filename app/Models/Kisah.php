@@ -45,4 +45,14 @@ class Kisah extends Model
             ->withPivot('value')
             ->withTimestamps();
     }
+
+    public function likes()
+    {
+        return $this->hasMany(Reaction::class)->where('value', 1);
+    }
+
+    public function dislikes()
+    {
+        return $this->hasMany(Reaction::class)->where('value', -1);
+    }
 }
