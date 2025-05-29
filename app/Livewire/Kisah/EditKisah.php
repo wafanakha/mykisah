@@ -46,7 +46,6 @@ class EditKisah extends Component
             'judul' => ['required', 'string', 'max:255'],
             'sinopsis' => ['required', 'string', 'max:500'],
             'isi' => ['required', 'string'],
-            'cover' => ['nullable', 'image', 'max:2048'],
             'selectedGenres' => ['required', 'array', 'min:1'],
             'selectedGenres.*' => [Rule::in($this->allGenres)],
         ];
