@@ -7,6 +7,17 @@
         </div>
     @endif
 
+        @if ($errors->any())
+            <div class="mb-4 text-red-500">
+                <ul class="list-disc pl-5">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+
     <form wire:submit.prevent="save" class="space-y-6">
         <!-- Judul -->
         <div>

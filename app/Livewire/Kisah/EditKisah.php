@@ -4,6 +4,7 @@ namespace App\Livewire\Kisah;
 
 use App\Models\Kisah;
 use App\Models\Genre;
+use App\Http\Controllers\kisahController;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Storage;
@@ -20,6 +21,7 @@ class EditKisah extends Component
 
     public $selectedGenres = [];
     public $allGenres;
+
 
     public function mount(Kisah $kisah)
     {
@@ -56,6 +58,21 @@ class EditKisah extends Component
     {
         $this->validate();
 
+        $validationResult = app()->call(
+            'App\Http\Controllers\kisahController@validateContentWithDeepseek',
+            ['data' => [
+                'judul' => $this->judul,
+                'isi' => $this->isi,
+                'sinopsis' => $this->sinopsis,
+            ]]
+        );
+
+
+        if ($validationResult !== true) {
+            return back()
+                ->withErrors(['content_validation' => $validationResult])
+                ->withInput();
+        }
         // Update data kisah
         $this->kisah->update([
             'judul' => $this->judul,

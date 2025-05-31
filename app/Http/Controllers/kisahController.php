@@ -7,7 +7,9 @@ use App\Models\bookmark;
 use App\Models\Kisah;
 use App\Models\genre;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class kisahController extends Controller
@@ -158,6 +160,7 @@ class kisahController extends Controller
 
     public function store(Request $request)
     {
+        // Validasi input awal
         $validated = $request->validate([
             'judul' => 'required|string|max:255',
             'sinopsis' => 'required|string|max:255',
@@ -166,6 +169,16 @@ class kisahController extends Controller
             'genres.*' => 'in:Romance,Fantasy,Horror,Misteri,Laga,Sejarah,Fiksi Ilmiah,Petualangan'
         ]);
 
+        // Validasi konten dengan Deepseek
+        $validationResult = $this->validateContentWithDeepseek($validated);
+        if ($validationResult !== true) {
+            return response()->json([
+                'error' => 'Content validation failed',
+                'messages' => $validationResult
+            ], 422);
+        }
+
+        // Simpan kisah jika lolos validasi
         $kisah = Kisah::create([
             'judul' => $validated['judul'],
             'sinopsis' => $validated['sinopsis'],
@@ -176,16 +189,89 @@ class kisahController extends Controller
         ]);
 
         foreach ($validated['genres'] as $genre) {
-            genre::create([
+            Genre::create([
                 'kisah_id' => $kisah->id,
                 'genre' => $genre
             ]);
         }
 
         return response()->json([
-            'message' => 'Kisah dan genre Ditambah!',
+            'message' => 'Kisah dan genre berhasil ditambahkan!',
             'kisah' => $kisah->load('genres', 'user')
         ], 201);
+    }
+
+    public function validateContentWithDeepseek($data)
+    {
+        $contents = [
+            'judul' => $data['judul'],
+            'sinopsis' => $data['sinopsis'],
+            'isi' => $data['isi'],
+        ];
+
+        $invalidSections = [];
+
+        foreach ($contents as $field => $text) {
+            try {
+                $response = Http::withHeaders([
+                    'Authorization' => 'Bearer ',
+                    'Content-Type' => 'application/json',
+                ])->post('https://api.deepseek.com/v1/chat/completions', [
+                    'model' => 'deepseek-chat',
+                    'messages' => [
+                        [
+                            'role' => 'system',
+                            'content' => 'Anda adalah moderator untuk aplikasi mykisah. Periksa konten dan tentukan apakah konten ini valid (tidak mengandung kata vulgar, ujaran kebencian, atau konten tidak pantas) namun masih meloloskan kata atau kalimat yang tidak vulgar. Output harus dalam format JSON dengan kunci "valid" (boolean) dan "reason" (string opsional).'
+                        ],
+                        [
+                            'role' => 'user',
+                            'content' => $text
+                        ]
+                    ],
+                    'response_format' => ['type' => 'json_object'],
+                    'stream' => false,
+                ]);
+
+                Log::info("Deepseek validation for {$field}", [
+                    'status' => $response->status(),
+                    'response' => $response->body()
+                ]);
+
+                if (!$response->successful()) {
+                    throw new \Exception("Deepseek API returned status: " . $response->status());
+                }
+
+                $result = json_decode($response->body(), true);
+                $messageContent = $result['choices'][0]['message']['content'] ?? null;
+
+                if (!$messageContent) {
+                    $invalidSections[$field] = 'No content in API response';
+                    continue;
+                }
+
+                $validationResult = json_decode($messageContent, true);
+
+                if (json_last_error() !== JSON_ERROR_NONE) {
+                    $invalidSections[$field] = 'Invalid JSON response from API';
+                    continue;
+                }
+
+                if (!isset($validationResult['valid'])) {
+                    $invalidSections[$field] = 'Missing valid key in response';
+                    continue;
+                }
+
+                if ($validationResult['valid'] !== true) {
+                    $reason = $validationResult['reason'] ?? 'Content not appropriate';
+                    $invalidSections[$field] = $reason;
+                }
+            } catch (\Exception $e) {
+                Log::error("Deepseek validation error for {$field}: " . $e->getMessage());
+                $invalidSections[$field] = 'Validation service unavailable';
+            }
+        }
+
+        return empty($invalidSections) ? true : $invalidSections;
     }
 
     public function destroy($id)
@@ -219,7 +305,14 @@ class kisahController extends Controller
             'genres.*' => 'in:Romance,Fantasy,Horror,Misteri,Laga,Sejarah,Fiksi Ilmiah,Petualangan'
         ]);
 
-        // Update only provided fields
+        $validationResult = $this->validateContentWithDeepseek($validated);
+        if ($validationResult !== true) {
+            return response()->json([
+                'error' => 'Content validation failed',
+                'messages' => $validationResult
+            ], 422);
+        }
+
         $kisah->fill($validated);
         $kisah->save();
 
@@ -242,10 +335,10 @@ class kisahController extends Controller
         ]);
     }
 
-    // buat website
+
     public function index()
     {
-        $user =  User::find(Auth::id());
+        $user = User::find(Auth::id());
         $kisahs = Kisah::with('user')->get();
         $token = session()->get('accessToken');
 
@@ -290,7 +383,6 @@ class kisahController extends Controller
         }
     }
 
-
     public function web_create()
     {
         $genres = Genre::all();
@@ -306,6 +398,13 @@ class kisahController extends Controller
             'genres' => 'required|array',
             'genres.*' => 'in:Romance,Fantasy,Horror,Misteri,Laga,Sejarah,Fiksi Ilmiah,Petualangan'
         ]);
+
+        $validationResult = $this->validateContentWithDeepseek($validated);
+        if ($validationResult !== true) {
+            return back()
+                ->withErrors(['content_validation' => $validationResult])
+                ->withInput();
+        }
 
         $kisah = Kisah::create([
             'judul' => $validated['judul'],
@@ -323,6 +422,7 @@ class kisahController extends Controller
                 'genre' => $genre
             ]);
         }
+
         return redirect()->route('profile', Auth::id())->with('success', 'Kisah berhasil dibuat!');
     }
 }
