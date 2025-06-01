@@ -342,7 +342,7 @@ class kisahController extends Controller
         $kisahs = Kisah::with('user')->get();
         $token = session()->get('accessToken');
 
-        $kisahList = Kisah::with(['user', 'genres'])->latest()->get();
+        $kisahList = Kisah::with(['user', 'genres'])->latest()->get()->shuffle();
         $bookmarkedIds = $user->bookmarks()->pluck('kisah_id')->toArray();
 
         return view('dashboard', compact('kisahList', 'bookmarkedIds', 'token'));
