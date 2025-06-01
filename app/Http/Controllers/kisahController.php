@@ -214,7 +214,7 @@ class kisahController extends Controller
         foreach ($contents as $field => $text) {
             try {
                 $response = Http::withHeaders([
-                    'Authorization' => 'Bearer ',
+                    'Authorization' => 'Bearer sk-0983a0afc14c4d74b4dd0589bb3ef673',
                     'Content-Type' => 'application/json',
                 ])->post('https://api.deepseek.com/v1/chat/completions', [
                     'model' => 'deepseek-chat',

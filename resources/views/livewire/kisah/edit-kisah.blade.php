@@ -1,22 +1,12 @@
 <div class="max-w-4xl mx-auto py-8 px-4">
     <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Edit Kisah</h1>
 
-    @if(session('message'))
-        <div class="mb-4 p-4 bg-green-100 border border-green-300 text-green-700 rounded">
-            {{ session('message') }}
+
+    @error('content_validation')
+        <div class="mb-4 p-4 bg-red-100 border border-red-300 text-red-700 rounded">
+            {{ $message }}
         </div>
-    @endif
-
-        @if ($errors->any())
-            <div class="mb-4 text-red-500">
-                <ul class="list-disc pl-5">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-
+    @enderror
 
     <form wire:submit.prevent="save" class="space-y-6">
         <!-- Judul -->

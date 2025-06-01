@@ -67,19 +67,17 @@ class EditKisah extends Component
             ]]
         );
 
-
         if ($validationResult !== true) {
-            return back()
-                ->withErrors(['content_validation' => $validationResult])
-                ->withInput();
+            $this->addError('content_validation', $validationResult);
+            return;
         }
+
         // Update data kisah
         $this->kisah->update([
             'judul' => $this->judul,
             'sinopsis' => $this->sinopsis,
             'isi' => $this->isi,
         ]);
-
 
         // Sync genres
         $this->kisah->genres()->delete();
