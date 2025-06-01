@@ -41,12 +41,9 @@ class KisahPolicy
         return $user->id === $kisah->user_id;
     }
 
-    /**
-     * Determine whether the user can delete the model.
-     */
     public function delete(User $user, kisah $kisah): bool
     {
-        return false;
+        return $user->id === $kisah->user_id;
     }
 
     /**

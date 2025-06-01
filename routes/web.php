@@ -56,4 +56,8 @@ Route::get('/kisah/{kisah}/edit', \App\Livewire\Kisah\EditKisah::class)
     ->name('kisah.edit')
     ->middleware('auth');
 
+Route::delete('/kisah/{kisah}', [KisahController::class, 'web_destroy'])
+    ->name('kisah.destroy')
+    ->middleware('auth');
+
 require __DIR__ . '/auth.php';

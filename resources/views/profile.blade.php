@@ -63,6 +63,15 @@
                                 class="inline-block text-sm text-blue-600 dark:text-blue-400 hover:underline">
                                 ✏️ Edit Kisah
                             </a>
+                                    <form action="{{ route('kisah.destroy', $kisah) }}" method="POST" class="inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" 
+                                            onclick="return confirm('Are you sure you want to delete this kisah?')"
+                                            class="text-sm text-red-600 dark:text-red-400 hover:underline">
+                                            🗑️ Delete Kisah
+                                        </button>
+                                    </form>
                         </div>
                     @endcan
                 </div>

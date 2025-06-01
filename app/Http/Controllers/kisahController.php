@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\bookmark;
 use App\Models\Kisah;
 use App\Models\genre;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Auth;
@@ -424,5 +425,29 @@ class kisahController extends Controller
         }
 
         return redirect()->route('profile', Auth::id())->with('success', 'Kisah berhasil dibuat!');
+    }
+
+    public function web_destroy(Kisah $kisah)
+    {
+        $this->authorize('delete', $kisah);
+
+
+        DB::transaction(function () use ($kisah) {
+            // Delete all related records
+            $kisah->genres()->delete();
+            $kisah->comments()->delete();
+
+            // Handle reactions (pivot table)
+            $kisah->reactions()->detach();
+
+            // Handle bookmarks (assuming many-to-many relationship)
+            $kisah->bookmarkedBy()->detach();
+
+            // Finally delete the kisah
+            $kisah->delete();
+        });
+
+        return redirect()->route('profile', $kisah->user)
+            ->with('success', 'Kisah deleted successfully');
     }
 }
