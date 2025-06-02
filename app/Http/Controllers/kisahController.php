@@ -337,6 +337,7 @@ class kisahController extends Controller
     }
 
 
+
     public function index()
     {
         $user = User::find(Auth::id());

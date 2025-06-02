@@ -23,6 +23,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('user/addBookmark', [userController::class, 'addBookmark']);
     Route::get('user/getBookmark', [userController::class, 'getBookmark']);
+    Route::delete('/bookmarks/{kisah}', [userController::class, 'destroy_bookmark']);
 });
 
 Route::get('/user/{user}', function (User $user) {

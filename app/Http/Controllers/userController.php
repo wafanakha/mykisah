@@ -94,6 +94,18 @@ class userController extends Controller
         return response()->json($bookmarks);
     }
 
+
+    public function destroy_bookmark(Request $request, Kisah $kisah)
+    {
+        $user = $request->user();
+
+        $user->bookmarks()->detach($kisah->id);
+
+        return response()->json([
+            'message' => 'Bookmark removed successfully.',
+        ]);
+    }
+
     public function update(Request $request)
     {
         $user = $request->user();
