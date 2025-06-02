@@ -30,6 +30,8 @@ Route::get('/user/{user}', function (User $user) {
     return $user;
 });
 
+Route::middleware('auth:sanctum')->get('/me', [UserController::class, 'me']);
+
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('kisah/create', [kisahController::class, 'store']);
 

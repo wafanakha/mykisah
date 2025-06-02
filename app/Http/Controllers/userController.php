@@ -130,6 +130,30 @@ class userController extends Controller
             'user' => $user,
         ]);
     }
+
+    public function me(Request $request)
+    {
+        $user = $request->user()->load('kisah.genres');
+
+        return response()->json([
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'avatar_url' => $user->avatar_url,
+            ],
+            'kisah' => $user->kisah->map(function ($kisah) {
+                return [
+                    'id' => $kisah->id,
+                    'judul' => $kisah->judul,
+                    'sinopsis' => $kisah->sinopsis,
+                    'genres' => $kisah->genres->pluck('genre'),
+                    'created_at' => $kisah->created_at,
+                ];
+            }),
+        ]);
+    }
+
     //   For Web
 
     public function profile($id)
