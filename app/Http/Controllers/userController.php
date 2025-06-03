@@ -154,6 +154,8 @@ class userController extends Controller
         ]);
     }
 
+
+
     //   For Web
 
     public function profile($id)

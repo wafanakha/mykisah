@@ -8,6 +8,7 @@ use App\Http\Controllers\SearchController;
 use App\Livewire\Search;
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
+use Illuminate\Support\Facades\Response;
 
 
 Route::get('/', function () {
@@ -59,5 +60,18 @@ Route::get('/kisah/{kisah}/edit', \App\Livewire\Kisah\EditKisah::class)
 Route::delete('/kisah/{kisah}', [KisahController::class, 'web_destroy'])
     ->name('kisah.destroy')
     ->middleware('auth');
+
+Route::get('/avatar/{filename}', function ($filename) {
+    $path = storage_path('app/public/avatars/' . $filename);
+
+    if (!file_exists($path)) {
+        abort(404);
+    }
+
+    return Response::file($path, [
+        'Access-Control-Allow-Origin' => '*',
+        'Content-Type' => mime_content_type($path),
+    ]);
+});
 
 require __DIR__ . '/auth.php';

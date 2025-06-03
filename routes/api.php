@@ -10,6 +10,7 @@ use App\Http\Controllers\GoogleAuthController;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Response;
 
 Route::post('/sanctum/token', [authController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
@@ -70,6 +71,18 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/users/{user}/reactions', [ReactionController::class, 'userReactions']);
 });
 
+Route::get('/avatar/{filename}', function ($filename) {
+    $path = storage_path('app/public/' . $filename);
+
+    if (!file_exists($path)) {
+        abort(404);
+    }
+
+    return Response::file($path, [
+        'Access-Control-Allow-Origin' => '*',
+        'Content-Type' => mime_content_type($path),
+    ]);
+});
 
 Route::get('/mobile/auth/google/redirect', [GoogleAuthController::class, 'redirect'])->name('auth.google.redirect');
 Route::get('/mobile/auth/google/callback', [GoogleAuthController::class, 'callback'])->name('auth.google.callback');
