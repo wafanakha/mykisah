@@ -33,20 +33,25 @@ class userController extends Controller
 
     public function storeAvatar(Request $request)
     {
-        $user = User::find(Auth::id());
+        $user =  User::find(Auth::id());
 
         $request->validate([
-            'avatar' => 'required|image|mimes:jpg,jpeg,png,gif|max:2048',
+            'avatar' => 'required|image|mimes:jpg,jpeg,png,gif',
         ]);
 
         $file = $request->file('avatar');
         $filename = time() . '_' . $user->id . '.' . $file->extension();
+        $path = public_path('storage/avatars/');
 
-        $file->move(public_path('images'), $filename);
+        if (!file_exists($path)) {
+            mkdir($path, 0775, true);
+        }
 
-        $imageUrl = 'images/' . $filename;
+        $file->move($path, $filename);
+
+        $imageUrl = 'storage/avatars/' . $filename;
         $user->avatar = $imageUrl;
-        $user->save(); // 
+        $user->save();
 
         return response()->json([
             'message' => 'Image uploaded successfully',
