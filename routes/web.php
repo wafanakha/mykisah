@@ -9,6 +9,7 @@ use App\Livewire\Search;
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 use Illuminate\Support\Facades\Response;
+use \App\Livewire\Kisah\EditKisah;
 
 
 Route::get('/', function () {
@@ -36,9 +37,9 @@ Route::middleware(['auth'])->group(function () {
     Route::post('kisah', [KisahController::class, 'web_store'])->name('kisah.store');
 });
 
-Route::get('/search', \App\Livewire\Search::class)->name('search');
+Route::get('/search', Search::class)->name('search');
 
-Route::get('/bookmarks', [\App\Http\Controllers\userController::class, 'web_bookmark'])->name('bookmarks.index')->middleware('auth');
+Route::get('/bookmarks', [userController::class, 'web_bookmark'])->name('bookmarks.index')->middleware('auth');
 
 Route::get('/dashboard', [kisahController::class, 'index'])->middleware(['auth'])->name('dashboard');
 Route::get('/kisah/{id}', [KisahController::class, 'web_show'])->name('kisah.show');
@@ -53,7 +54,7 @@ Route::get('/users/{user}/followers', [userController::class, 'followers'])
 Route::get('/users/{user}/following', [userController::class, 'following'])
     ->name('profile.following');
 
-Route::get('/kisah/{kisah}/edit', \App\Livewire\Kisah\EditKisah::class)
+Route::get('/kisah/{kisah}/edit', EditKisah::class)
     ->name('kisah.edit')
     ->middleware('auth');
 

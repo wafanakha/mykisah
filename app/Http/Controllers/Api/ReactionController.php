@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\DB;
 
 class ReactionController extends Controller
 {
-    // Store or update reaction
     public function store(Request $request, Kisah $kisah)
     {
         $request->validate([
@@ -20,12 +19,10 @@ class ReactionController extends Controller
 
         $user = Auth::user();
 
-        // Using syncWithoutDetach to update or create
         $kisah->reactions()->syncWithoutDetaching([
             $user->id => ['value' => $request->value]
         ]);
 
-        // Get updated counts
         $counts = $this->getReactionCounts($kisah);
 
         return response()->json([
@@ -36,7 +33,6 @@ class ReactionController extends Controller
         ]);
     }
 
-    // Get user's reaction to a kisah
     public function show(Kisah $kisah)
     {
         $user = Auth::user();
@@ -53,7 +49,6 @@ class ReactionController extends Controller
         ]);
     }
 
-    // Remove reaction
     public function destroy(Kisah $kisah)
     {
         $user = Auth::user();
@@ -68,7 +63,6 @@ class ReactionController extends Controller
         ]);
     }
 
-    // Get all reactions for a user
     public function userReactions(User $user)
     {
         $reactions = $user->reactedKisah()
@@ -79,7 +73,6 @@ class ReactionController extends Controller
         return response()->json($reactions);
     }
 
-    // Helper method to get reaction counts
     private function getReactionCounts(Kisah $kisah)
     {
         $counts = DB::table('kisah_user_reactions')

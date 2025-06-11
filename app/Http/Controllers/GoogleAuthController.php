@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Laravel\Socialite\Facades\Socialite;
+use App\Models\User;
 use Throwable;
 
 class GoogleAuthController extends Controller
@@ -39,5 +39,35 @@ class GoogleAuthController extends Controller
             Auth::login($newUser);
         }
         return redirect()->intended(route('dashboard', absolute: false) . '?verified=1');
+    }
+    public function handleGoogleLogin(Request $request)
+    {
+        $request->validate([
+            'access_token' => 'required|string',
+        ]);
+
+        try {
+            $googleUser = $googleUser = Socialite::driver('google')->user();
+        } catch (Throwable $e) {
+            return response()->json(['message' => 'Invalid Google token.'], 401);
+        }
+
+        $user = User::where('email', $googleUser->email)->first();
+
+        if (!$user) {
+            $user = User::create([
+                'name' => $googleUser->name,
+                'email' => $googleUser->email,
+                'email_verified_at' => now(),
+                'password' => bcrypt(Str::random(16)), // Random password
+            ]);
+        }
+
+        $token = $user->createToken('google_login_token')->plainTextToken;
+
+        return response()->json([
+            'user' => $user,
+            'token' => $token,
+        ]);
     }
 }

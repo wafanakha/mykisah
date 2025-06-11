@@ -74,7 +74,7 @@ class kisahController extends Controller
 
     public function getKisahSearch()
     {
-        return Kisah::select('kisah.id', 'kisah.judul', 'kisah.user_id')
+        return Kisah::select('kisah.id', 'kisah.judul', 'kisah.user_id', 'kisah.sinopsis', 'kisah.isi')
             ->with(['user', 'genres', 'reactions', 'bookmarkedBy'])
             ->get()
             ->map(function ($kisah) {
@@ -82,7 +82,10 @@ class kisahController extends Controller
                     'id' => $kisah->id,
                     'judul' => $kisah->judul,
                     'user_name' => $kisah->user->name,
+                    'avatarurl' => $kisah->user->avatar,
                     'genres' => $kisah->genres->pluck('genre'),
+                    'sinopsis' => $kisah->sinopsis,
+                    'isi' => $kisah->isi,
                     'like_count' => $kisah->reactions()->wherePivot('value', 1)->count(),
                     'dislike_count' => $kisah->reactions()->wherePivot('value', -1)->count(),
                     'bookmark_count' => $kisah->bookmarkedBy()->count(),

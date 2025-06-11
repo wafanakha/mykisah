@@ -84,5 +84,7 @@ Route::get('/avatar/{filename}', function ($filename) {
     ]);
 });
 
-Route::get('/mobile/auth/google/redirect', [GoogleAuthController::class, 'redirect'])->name('auth.google.redirect');
-Route::get('/mobile/auth/google/callback', [GoogleAuthController::class, 'callback'])->name('auth.google.callback');
+
+Route::post('/auth/google', [GoogleAuthController::class, 'handleGoogleLogin']);
+// Route::get('/mobile/auth/google/redirect', [GoogleAuthController::class, 'redirect'])->name('auth.google.redirect');
+// Route::get('/mobile/auth/google/callback', [GoogleAuthController::class, 'callback'])->name('auth.google.callback');
